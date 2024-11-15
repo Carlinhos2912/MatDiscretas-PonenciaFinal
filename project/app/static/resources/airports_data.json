@@ -1,0 +1,28 @@
+{
+    "AAE": {
+      "name": "Atlanta Airport",
+      "latitude": 3.2163520014773352,
+      "longitude": -72.58170851819821,
+      "city": "Barrancabermeja",
+      "international": false,
+      "connections": ["AAR", "WWE"]
+    },
+
+    "AAR": {
+      "name": "Aarhus Airport",
+      "latitude": 13.0241688430119,
+      "longitude": 13.0241688430119,
+      "city": "San Andrés Islas",
+      "international": true,
+      "connections": ["AAE", "WWE"]
+    },
+
+    "WWE": {
+      "name": "Wuw Airport",
+      "latitude": 12.203829357268837,
+      "longitude": -69.11694301206879,
+      "city": "Permanganato de Sodio",
+      "international": true,
+      "connections": ["AAE", "AAR"]
+    }
+}
