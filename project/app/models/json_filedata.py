@@ -1,53 +1,40 @@
-import math
-import pandas as pd
+import json
 import math
 
 from .graph import Graph
 
-class CSV_FileData():
+class JSON_FileData():
     def __init__(self, filepath:str) -> None:
 
-        #DataFrame that stores everything in the CSV in the columns as named below
-        self.dataframe:pd.DataFrame = pd.read_csv(filepath)
-        self.dataframe = self.dataframe[['Source Airport Code',
-                                         'Source Airport Name',
-                                         'Source Airport City',
-                                         'Source Airport Country',
-                                         'Source Airport Latitude',
-                                         'Source Airport Longitude',
-                                         'Destination Airport Code',
-                                         'Destination Airport Name',
-                                         'Destination Airport City',
-                                         'Destination Airport Country',
-                                         'Destination Airport Latitude',
-                                         'Destination Airport Longitude']]
-        #self.dataframe = self.dataframe.drop_duplicates() 
-        #Se remueven los dupes para evitar calcular distancias redundantes, pero igual se puede omitir (el grafo lo valida)
-        
-        self.dataframe = self.dataframe.reset_index()
-
+        self.data:dict = {}
+        with open(filepath) as file:
+            self.data = json.load(file)
+            file.close
+            
         #List used to map each code to an index
-        self.code_list:list = sorted(pd.unique(self.dataframe[['Source Airport Code', 'Destination Airport Code']].values.ravel()))
-
-        #Dict
+        self.code_list:list = list(self.data.keys())
+    
+        #Dict that maps each airport to its index
         self.code_dict:dict = {airport:idx for idx, airport in enumerate(self.code_list)}
         
         #List of tuples that each describes an edge in the to-be graph
-        self.connections:list = self.dataframe.apply(lambda row: (
-                                                             row['Source Airport Code'], #FROM
-                                                             row['Destination Airport Code'], #TO
+        self.connections:list = self.get_connections(self.data)
+        print(self.connections)
+    
+    def get_connections(self, d) -> list[tuple]:
+        connections = []
+        for code, airport in d.items():
+            print("looking at: ", end="")
+            print(code)
+            for connected_code in airport['connections']:
+                lat1, lon1 = airport['latitude'], airport['longitude']
+                lat2, lon2 = d[connected_code]['latitude'], d[connected_code]['longitude']
+                dist = self.calculate_distances(lat1, lon1, lat2, lon2)
+                if (code, connected_code, dist) not in connections:
+                    connections.append((code, connected_code, dist))
+                    connections.append((connected_code, code, dist))
+        return connections
 
-                                                             self.calculate_distances(
-                                                                 row['Source Airport Latitude'], 
-                                                                 row['Source Airport Longitude'],
-                                                                 row['Destination Airport Latitude'], 
-                                                                 row['Destination Airport Longitude'])
-                                                            ), 
-                                                            axis=1).values.tolist()
-        
-        self.graph = csv_to_graph(self)
-        #print(self.connections)
-        
     def calculate_distances(self, lat1, lon1, lat2, lon2):
         # Convertir las coordenadas de grados a radianes
         lat1 = math.radians(lat1)
@@ -135,24 +122,6 @@ class CSV_FileData():
             in_list.append(adjacent_index)
         
         return in_list
-
-def csv_to_graph(path:CSV_FileData) -> Graph:
-    try:
-        csv = path #Opens csv, if its there
-    except:
-        print("Invalid Filepath :(")
-        return
-    
-    grafo = Graph(len(csv.code_list)) #Makes a graph with the nodes needed
-
-    for edge in csv.connections: #Adds the edges
-            frm:int = csv.code_dict[edge[0]]
-            to:int = csv.code_dict[edge[1]]
-            dist:float = edge[2]
-            print("FROM: ", edge[0], frm, " TO: ", edge[1], to, " DIST: ", dist, end="\n")
-            grafo.add_edge(frm, to, dist)
-    
-    return grafo
 
     
 
