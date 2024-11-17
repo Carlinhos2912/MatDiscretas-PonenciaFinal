@@ -1,168 +1,168 @@
 {
   "BOG": {
-    "name": "Aeropuerto El Dorado",
+    "name": "El Dorado International Airport",
     "latitude": 4.7016,
-    "longitude": 74.1469,
+    "longitude": -74.1469,
     "city": "Bogotá",
-    "international": false,
-    "connections": ["ADZ","VGZ","PCR","LET","SVI","VVC","EOH","BGA","EJA","IBE","PPN","IPI","CUC","CTG","CLO","AXM","UIB","MTR","PUU","EYP","APO","VUP","BAQ","PSO","RCH","AUC","BUN","FLA","NVA","SJE","MVP","MZL","RVE","SMR","MDE","TME","PEI","CZU","PDA"]
+    "international": true,
+    "connections": ["ADZ", "VGZ", "PCR", "LET", "SVI", "VVC", "EOH", "BGA", "EJA", "IBE", "PPN", "IPI", "CUC", "CTG", "CLO", "AXM", "UIB", "MTR", "PUU", "EYP", "APO", "VUP", "BAQ", "PSO", "RCH", "AUC", "BUN", "FLA", "NVA", "SJE", "MVP", "MZL", "RVE", "SMR", "MDE", "TME", "PEI", "CZU", "PDA"]
   },
   "MDE": {
-    "name": "Aeropuerto José María Córdova",
+    "name": "José María Córdova International Airport",
     "latitude": 6.1645,
-    "longitude": 75.4231,
+    "longitude": -75.4231,
     "city": "Medellín",
-    "international": false,
-    "connections": ["BGA","CLO","ADZ","SMR","BAQ","BOG","CUC","CTG"]
+    "international": true,
+    "connections": ["BGA", "CLO", "ADZ", "SMR", "BAQ", "BOG", "CUC", "CTG"]
   },
   "CTG": {
-    "name": "Aeropuerto Rafael Núñez",
+    "name": "Rafael Núñez International Airport",
     "latitude": 10.4424,
-    "longitude": 75.513,
+    "longitude": -75.513,
     "city": "Cartagena",
-    "international": false,
-    "connections": ["BOG","ADZ","MDE","CLO"]
+    "international": true,
+    "connections": ["BOG", "ADZ", "MDE", "CLO"]
   },
   "CLO": {
-    "name": "Aeropuerto Alfonso Bonilla Aragón",
+    "name": "Alfonso Bonilla Aragón International Airport",
     "latitude": 3.5432,
-    "longitude": 76.3816,
+    "longitude": -76.3816,
     "city": "Cali",
-    "international": false,
-    "connections": ["ADZ","UIB","PUU","BAQ","MDE","PSO","BOG","TCO","GPI","CTG"]
+    "international": true,
+    "connections": ["ADZ", "UIB", "PUU", "BAQ", "MDE", "PSO", "BOG", "TCO", "GPI", "CTG"]
   },
   "BAQ": {
-    "name": "Aeropuerto Ernesto Cortissoz",
+    "name": "Ernesto Cortissoz International Airport",
     "latitude": 10.8896,
-    "longitude": 74.7808,
+    "longitude": -74.7808,
     "city": "Barranquilla",
-    "international": false,
-    "connections": ["BOG","ADZ","MDE","CLO"]
+    "international": true,
+    "connections": ["BOG", "ADZ", "MDE", "CLO"]
   },
   "BGA": {
-    "name": "Aeropuerto Palonegro",
+    "name": "Palonegro International Airport",
     "latitude": 7.1265,
-    "longitude": 73.1848,
+    "longitude": -73.1848,
     "city": "Bucaramanga",
-    "international": false,
-    "connections": ["BOG","MDE"]
+    "international": true,
+    "connections": ["BOG", "MDE"]
   },
   "SMR": {
-    "name": "Aeropuerto Simón Bolívar",
+    "name": "Simón Bolívar International Airport",
     "latitude": 11.1196,
-    "longitude": 74.2306,
+    "longitude": -74.2306,
     "city": "Santa Marta",
-    "international": false,
-    "connections": ["BOG","MDE"]
+    "international": true,
+    "connections": ["BOG", "MDE"]
   },
   "ADZ": {
-    "name": "Aeropuerto Gustavo Rojas Pinilla",
+    "name": "Gustavo Rojas Pinilla International Airport",
     "latitude": 12.5836,
-    "longitude": 81.7112,
+    "longitude": -81.7112,
     "city": "San Andrés",
-    "international": false,
-    "connections": ["CLO","PVA","MDE","BAQ","PEI","BOG","CTG"]
+    "international": true,
+    "connections": ["CLO", "PVA", "MDE", "BAQ", "PEI", "BOG", "CTG"]
   },
   "PEI": {
-    "name": "Aeropuerto Matecaña",
+    "name": "Matecaña International Airport",
     "latitude": 4.8127,
-    "longitude": 75.7395,
+    "longitude": -75.7395,
     "city": "Pereira",
-    "international": false,
-    "connections": ["BOG","ADZ","EOH"]
+    "international": true,
+    "connections": ["BOG", "ADZ", "EOH"]
   },
   "CUC": {
-    "name": "Aeropuerto Camilo Daza",
+    "name": "Camilo Daza International Airport",
     "latitude": 7.9276,
-    "longitude": 72.5115,
+    "longitude": -72.5115,
     "city": "Cúcuta",
-    "international": false,
-    "connections": ["BOG","MDE"]
+    "international": true,
+    "connections": ["BOG", "MDE"]
   },
   "AXM": {
-    "name": "Aeropuerto El Edén",
+    "name": "El Edén International Airport",
     "latitude": 4.4542,
-    "longitude": 75.7664,
+    "longitude": -75.7664,
     "city": "Armenia",
-    "international": false,
+    "international": true,
     "connections": ["BOG"]
   },
   "LET": {
-    "name": "Aeropuerto Alfredo Vásquez Cobo",
+    "name": "Alfredo Vásquez Cobo International Airport",
     "latitude": 4.1935,
-    "longitude": 69.9431,
+    "longitude": -69.9431,
     "city": "Leticia",
-    "international": false,
-    "connections": ["BOG","LPD"]
+    "international": true,
+    "connections": ["BOG", "LPD"]
   },
   "MTR": {
-    "name": "Aeropuerto Los Garzones",
+    "name": "Los Garzones Airport",
     "latitude": 8.8237,
-    "longitude": 75.8258,
+    "longitude": -75.8258,
     "city": "Montería",
     "international": false,
-    "connections": ["BOG","EOH"]
+    "connections": ["BOG", "EOH"]
   },
   "RCH": {
-    "name": "Aeropuerto Almirante Padilla",
+    "name": "Almirante Padilla Airport",
     "latitude": 11.5262,
-    "longitude": 72.926,
+    "longitude": -72.926,
     "city": "Riohacha",
     "international": false,
     "connections": ["BOG"]
   },
   "APO": {
-    "name": "Aeropuerto Antonio Roldán Betancourt",
+    "name": "Antonio Roldán Betancourt Airport",
     "latitude": 7.811,
-    "longitude": 76.7164,
+    "longitude": -76.7164,
     "city": "Apartadó",
     "international": false,
-    "connections": ["BOG","EOH"]
+    "connections": ["BOG", "EOH"]
   },
   "AUC": {
-    "name": "Aeropuerto Santiago Pérez Quiroz",
+    "name": "Santiago Pérez Quiroz Airport",
     "latitude": 7.0689,
-    "longitude": 70.7369,
+    "longitude": -70.7369,
     "city": "Arauca",
     "international": false,
     "connections": ["BOG"]
   },
   "BSC": {
-    "name": "Aeropuerto José Celestino Mutis",
+    "name": "José Celestino Mutis Airport",
     "latitude": 6.2028,
-    "longitude": 77.3947,
+    "longitude": -77.3947,
     "city": "Bahía Solano",
     "international": false,
     "connections": ["EOH"]
   },
   "EJA": {
-    "name": "Aeropuerto Yariguíes",
+    "name": "Yariguíes Airport",
     "latitude": 7.0243,
-    "longitude": 73.8068,
+    "longitude": -73.8068,
     "city": "Barrancabermeja",
     "international": false,
     "connections": ["BOG"]
   },
   "GYM": {
-    "name": "Aeropuerto Guaymaral",
+    "name": "Guaymaral Airport",
     "latitude": 4.812,
-    "longitude": 74.056,
+    "longitude": -74.056,
     "city": "Bogotá",
     "international": false,
-    "connections": null
-  },
+    "connections": []
+  },  
   "CAQ": {
     "name": "Aeropuerto Juan H. White",
     "latitude": 7.9685,
-    "longitude": 75.1985,
+    "longitude": -75.1985,
     "city": "Caucasia",
     "international": false,
-    "connections": null
+    "connections": []
   },
   "FLA": {
     "name": "Aeropuerto Gustavo Artunduaga",
     "latitude": 1.5892,
-    "longitude": 75.5644,
+    "longitude": -75.5644,
     "city": "Florencia",
     "international": false,
     "connections": ["BOG"]
@@ -170,7 +170,7 @@
   "GPI": {
     "name": "Aeropuerto Juan Casiano",
     "latitude": 2.5701,
-    "longitude": 77.8986,
+    "longitude": -77.8986,
     "city": "Guapi",
     "international": false,
     "connections": ["CLO"]
@@ -178,15 +178,15 @@
   "IBE": {
     "name": "Aeropuerto Perales",
     "latitude": 4.4216,
-    "longitude": 75.1333,
+    "longitude": -75.1333,
     "city": "Ibagué",
     "international": false,
-    "connections": ["BOG","EOH"]
+    "connections": ["BOG", "EOH"]
   },
   "IPI": {
     "name": "Aeropuerto San Luis",
     "latitude": 0.8619,
-    "longitude": 77.6718,
+    "longitude": -77.6718,
     "city": "Ipiales",
     "international": false,
     "connections": ["BOG"]
@@ -194,15 +194,15 @@
   "LMC": {
     "name": "Aeropuerto Javier Noreña Valencia",
     "latitude": 2.1792,
-    "longitude": 73.7872,
+    "longitude": -73.7872,
     "city": "La Chorrera",
     "international": false,
-    "connections": null
+    "connections": []
   },
   "MZL": {
     "name": "Aeropuerto La Nubia",
     "latitude": 5.0296,
-    "longitude": 75.4647,
+    "longitude": -75.4647,
     "city": "Manizales",
     "international": false,
     "connections": ["BOG"]
@@ -210,15 +210,15 @@
   "EOH": {
     "name": "Aeropuerto Enrique Olaya Herrera",
     "latitude": 6.2205,
-    "longitude": 75.5906,
+    "longitude": -75.5906,
     "city": "Medellín",
     "international": false,
-    "connections": ["UIB","MTR","IBE","BSC","APO","PEI","BOG","NQU"]
+    "connections": ["UIB", "MTR", "IBE", "BSC", "APO", "PEI", "BOG", "NQU"]
   },
   "VGZ": {
     "name": "Aeropuerto de Villagarzón",
     "latitude": 0.9788,
-    "longitude": 76.6056,
+    "longitude": -76.6056,
     "city": "Villagarzón",
     "international": false,
     "connections": ["BOG"]
@@ -226,23 +226,23 @@
   "LMN": {
     "name": "Aeropuerto Jorge Isaacs",
     "latitude": 11.233,
-    "longitude": 72.49,
+    "longitude": -72.49,
     "city": "Puerto Carreño",
     "international": false,
-    "connections": null
+    "connections": []
   },
   "MVP": {
     "name": "Aeropuerto Fabio Alberto León Bentley",
     "latitude": 1.2536,
-    "longitude": 70.2339,
+    "longitude": -70.2339,
     "city": "Mitú",
     "international": false,
-    "connections": ["BOG","VVC"]
+    "connections": ["BOG", "VVC"]
   },
   "NVA": {
     "name": "Aeropuerto Benito Salas",
     "latitude": 2.95,
-    "longitude": 75.294,
+    "longitude": -75.294,
     "city": "Neiva",
     "international": false,
     "connections": ["BOG"]
@@ -250,7 +250,7 @@
   "NQU": {
     "name": "Aeropuerto Reyes Murillo",
     "latitude": 5.6961,
-    "longitude": 77.2806,
+    "longitude": -77.2806,
     "city": "Nuquí",
     "international": false,
     "connections": ["EOH"]
@@ -258,23 +258,23 @@
   "PSO": {
     "name": "Aeropuerto Antonio Nariño",
     "latitude": 1.3962,
-    "longitude": 77.2915,
+    "longitude": -77.2915,
     "city": "Pasto",
     "international": false,
-    "connections": ["BOG","CLO"]
+    "connections": ["BOG", "CLO"]
   },
   "PTX": {
     "name": "Aeropuerto Contador",
     "latitude": 1.8578,
-    "longitude": 76.0857,
+    "longitude": -76.0857,
     "city": "Pitalito",
     "international": false,
-    "connections": null
+    "connections": []
   },
   "PPN": {
     "name": "Aeropuerto Guillermo León Valencia",
     "latitude": 2.4544,
-    "longitude": 76.6093,
+    "longitude": -76.6093,
     "city": "Popayán",
     "international": false,
     "connections": ["BOG"]
@@ -282,7 +282,7 @@
   "PVA": {
     "name": "Aeropuerto El Embrujo",
     "latitude": 13.3569,
-    "longitude": 81.3583,
+    "longitude": -81.3583,
     "city": "Providencia",
     "international": false,
     "connections": ["ADZ"]
@@ -290,31 +290,31 @@
   "PUU": {
     "name": "Aeropuerto Tres de Mayo",
     "latitude": 0.5052,
-    "longitude": 76.5008,
+    "longitude": -76.5008,
     "city": "Tumaco",
     "international": false,
-    "connections": ["BOG","LQM","CLO"]
+    "connections": ["BOG", "LQM", "CLO"]
   },
   "PGT": {
     "name": "Aeropuerto Morelia",
     "latitude": 4.3133,
-    "longitude": 72.3844,
+    "longitude": -72.3844,
     "city": "Morelia",
     "international": false,
-    "connections": null
+    "connections": []
   },
   "PDA": {
     "name": "Aeropuerto César Gaviria Trujillo",
     "latitude": 3.8533,
-    "longitude": 67.9062,
+    "longitude": -67.9062,
     "city": "Inírida",
     "international": false,
-    "connections": ["BOG","VVC"]
+    "connections": ["BOG", "VVC"]
   },
   "LQM": {
     "name": "Aeropuerto Caucayá",
     "latitude": 0.1822,
-    "longitude": 74.7708,
+    "longitude": -74.7708,
     "city": "Puerto Leguízamo",
     "international": false,
     "connections": ["PUU"]
@@ -322,31 +322,31 @@
   "PCR": {
     "name": "Aeropuerto Germán Olano",
     "latitude": 6.1847,
-    "longitude": 67.4932,
+    "longitude": -67.4932,
     "city": "Puerto Carreño",
     "international": false,
-    "connections": ["BOG","VVC"]
+    "connections": ["BOG", "VVC"]
   },
   "UIB": {
     "name": "Aeropuerto El Caraño",
     "latitude": 5.6908,
-    "longitude": 76.6412,
+    "longitude": -76.6412,
     "city": "Quibdó",
     "international": false,
-    "connections": ["BOG","CLO","EOH"]
+    "connections": ["BOG", "CLO", "EOH"]
   },
   "VVC": {
     "name": "Aeropuerto Vanguardia",
     "latitude": 4.1679,
-    "longitude": 73.6138,
+    "longitude": -73.6138,
     "city": "Villavicencio",
     "international": false,
-    "connections": ["BOG","PCR","PDA","MVP"]
+    "connections": ["BOG", "PCR", "PDA", "MVP"]
   },
   "SJE": {
     "name": "Aeropuerto Jorge Enrique González Torres",
     "latitude": 2.5794,
-    "longitude": 72.6394,
+    "longitude": -72.6394,
     "city": "San José del Guaviare",
     "international": false,
     "connections": ["BOG"]
@@ -354,7 +354,7 @@
   "LPD": {
     "name": "Aeropuerto La Pedrera",
     "latitude": 1.3286,
-    "longitude": 69.5794,
+    "longitude": -69.5794,
     "city": "La Pedrera",
     "international": false,
     "connections": ["LET"]
@@ -362,7 +362,7 @@
   "EYP": {
     "name": "Aeropuerto El Alcaraván",
     "latitude": 5.3191,
-    "longitude": 72.3844,
+    "longitude": -72.3844,
     "city": "Yopal",
     "international": false,
     "connections": ["BOG"]
@@ -370,9 +370,57 @@
   "TME": {
     "name": "Aeropuerto Los Colonos",
     "latitude": 3.82,
-    "longitude": 70.2339,
+    "longitude": -70.2339,
     "city": "Puerto Asís",
     "international": false,
-    "connections": ["BOG","RVE"]
+    "connections": ["BOG", "RVE"]
+  },
+  "SVI": {
+    "name": "Aeropuerto Eduardo Falla Solano",
+    "latitude": 2.15222,
+    "longitude": -74.76639,
+    "city": "San Vicente del Caguán",
+    "international": false,
+    "connections": ["BOG"]
+  },
+  "VUP": {
+    "name": "Aeropuerto Alfonso López Pumarejo",
+    "latitude": 10.4352,
+    "longitude": -73.24897,
+    "city": "Valledupar",
+    "international": false,
+    "connections": ["BOG"]
+  },
+  "BUN": {
+    "name": "Aeropuerto Gerardo Tobar López",
+    "latitude": 3.81963,
+    "longitude": -76.98980,
+    "city": "Buenaventura",
+    "international": false,
+    "connections": ["BOG"]
+  },
+  "RVE": {
+    "name": "Aeropuerto Los Colonizadores",
+    "latitude": 6.9518,
+    "longitude": -71.8572,
+    "city": "Saravena",
+    "international": false,
+    "connections": ["BOG", "TME"]
+  },
+  "CZU": {
+    "name": "Aeropuerto Las Brujas",
+    "latitude": 9.33274,
+    "longitude": -75.2856,
+    "city": "Corozal",
+    "international": false,
+    "connections": ["BOG"]
+  },
+  "TCO": {
+    "name": "Aeropuerto La Florida",
+    "latitude": 1.8146,
+    "longitude": -78.7492,
+    "city": "Tumaco",
+    "international": false,
+    "connections": ["CLO"]
   }
 }
