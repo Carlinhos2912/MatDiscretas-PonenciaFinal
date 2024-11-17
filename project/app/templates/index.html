@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despégala.com</title>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Leaflet Curve Addon -->
+    <script src="https://elfalem.github.io/Leaflet.curve/src/leaflet.curve.js"></script>
+
+    <!-- Custom  -->
+    <link rel="stylesheet" href="../static/css/home.css">
+    <script src="../static/js/home.js" defer></script>
+</head>
+
+<body>
+    <span class="loader" id="loader"></span>
+
+    <div class="sidebar" id="sidebar">
+        <header>
+            <i class="fa-solid fa-xmark" onclick="document.getElementById('sidebar').classList.toggle('closed');"></i>
+            <div></div>
+        </header>
+
+        <main>
+            <!-- Información del aeropuerto ( Códigos y botón de búsqueda ) -->
+            <div class="plane-info" id="plane-1">
+                <input id="read-id-1" type="text" value="BAQ" maxlength="3" minlength="3" autocomplete="off">
+                <h3 id="source-city">City</h3>
+                <h4 id="source-country">Country</h4>
+            </div>
+
+            <button class="separator" id="fetch-data"><i class="fa-solid fa-arrow-right"></i></button>
+
+            <div class="plane-info" id="plane-2">
+                <input id="read-id-2" type="text" value="CTG" maxlength="3" minlength="3" autocomplete="off">
+                <h3 id="destination-city">City</h3>
+                <h4 id="destination-country">Country</h4>
+            </div>
+
+            <!-- Información de las coordenadas ( Latitud y Longitud del aeropuerto ) -->
+            <div class="coords-container" id="latitude-source">
+                <p>LATITUDE</p>
+                <h2>1.02.2.4124</h2>
+            </div>
+
+            <div class="coords-container" id="latitude-destination">
+                <p>LATITUDE</p>
+                <h2>1.02.2.4124</h2>
+            </div>
+
+            <div class="coords-container" id="longitude-source">
+                <p>LONGITUDE</p>
+                <h2>1.02.2.4124</h2>
+            </div>
+
+            <div class="coords-container" id="longitude-destination">
+                <p>LONGITUDE</p>
+                <h2>1.02.2.4124</h2>
+            </div>
+
+            <!-- Distancia total del trayecto -->
+            <div class="distance-container">
+                <div><i class="fa-solid fa-plane"></i></div>
+                <p> ~ </p>
+            </div>
+        </main>
+
+        <!-- Información extra sobre el grafo en general -->
+        <div class="extra">
+            <div class="expandable">
+                <div class="menu">
+                    <span>Path to destination</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </div>
+                <div class="dropdown">
+                    <ul></ul>
+                </div>
+            </div>
+
+            <div class="expandable">
+                <div class="menu">
+                    <span>Graph Info</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </div>
+                <div class="dropdown opened">
+                    <ul>
+                        <li><a href="">No <span>Is graph connected</span></a></li>
+                        <li><a href="">7 <span>Number of components</span></a></li>
+                        <li><a href="">3220, 4, 4, 10, 2, 2, 4<span>Components vertices</span></a></li>
+                        <li><a href="">1197584.24, <br>787.25, <br>255.94, <br>1441.06, <br>37.82, <br>98.78, <br>1598.89.<span>MST Weights</span></a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="expandable">
+                <div class="menu">
+                    <span>Furthest Airports</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </div>
+                <div class="dropdown">
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+
+    <script>
+        document.querySelectorAll('.menu').forEach(menu => {
+            menu.addEventListener('click', function () {
+                const dropdown = this.nextElementSibling;
+
+                document.querySelectorAll('.dropdown').forEach(otherDropdown => {
+                    if (otherDropdown !== dropdown) {
+                        otherDropdown.classList.remove('opened');
+                        otherDropdown.style.maxHeight = '0px';
+                    }
+                });
+
+                dropdown.classList.toggle('opened');
+
+                if (dropdown.classList.contains('opened')) {
+                    dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+                } else {
+                    dropdown.style.maxHeight = '0px';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
