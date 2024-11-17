@@ -35,10 +35,10 @@ class JSON_FileData():
     def __init__(self, filepath:str):
 
         self.data:dict = {}
-        with open(filepath) as file:
+        with open(filepath, encoding="utf-8") as file:
             self.data = json.load(file)
             file.close
-            
+                    
         # Lista de la forma 0 = ['AAA']
         self.code_list:list = list(self.data.keys())
     

@@ -296,6 +296,16 @@ body {
     background-color: #2F2F2F;
 }
 
+.plane-icon {
+    width: 40px;
+    height: 40px;
+    filter: drop-shadow(0px 0px 5px #BB86FC);
+}
+  
+.plane-icon.active{
+    filter: drop-shadow(0px 0px 5px #ff2969);
+}
+
 /* ===================================== */
 /* Separator Styles */
 /* ===================================== */
@@ -369,4 +379,14 @@ body {
 @keyframes rotation {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+/* ===================================== */
+/* Info and Tooltips */
+/* ===================================== */
+#info-context-menu {
+    position: absolute;
+    padding: 8px;
+    background-color: #121212;
+    z-index: 999;
+    border-radius: 8px;
 }

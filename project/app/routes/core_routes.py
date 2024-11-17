@@ -6,7 +6,7 @@ core = Blueprint('core', __name__)
 
 # =======================================================================================================
 
-filedata = JSON_FileData("project/app/static/resources/airports_data.json")
+filedata = JSON_FileData("project/app/static/resources/base_airports_data.json")
 graph = filedata.graph
 
 # =======================================================================================================
