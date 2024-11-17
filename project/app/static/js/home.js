@@ -32,11 +32,10 @@ function setup() {
 
     initMap();
     initAirportData();
-    initAirportsMarkers();
 }
 
 function initMap() {
-    var map = L.map('map').setView([4.5709, -74.2973], 6);
+    map = L.map('map').setView([4.5709, -74.2973], 6);
     var bounds = [[-4.2316872, -82.1243666], [13.3920668, -66.8471272]];
 
     map.setMaxBounds(bounds);
@@ -49,33 +48,74 @@ function initMap() {
       }).addTo(map);
 }
 
-function initAirportData(jsonPath = 'app/static/resources/airports_data.json'){
-    import(jsonPath)
+function initAirportData(jsonPath = '../static/resources/extended_airports_data.json'){
+    fetch(jsonPath)
+    .then((response) => {
+        if (!response.ok) { throw new Error("ERROR FETCHING THE JSON") }
+        return response.json();
+    })
     .then((data) => {
-        data.default.forEach((em) => { airports[em.code] = em; console.log(em) })
+        console.log(data)
+        airports = data
+    })
+    .then(() => {
+        initAirportsMarkers()
+    })
+    .catch((error) => {
+        console.error('Error fetching the JSON file:', error);
     });
 }
 
 function initAirportsMarkers() {
-    airports.forEach((airport) => {
-        createMarker(airport[latitude], airport[longitude]);
-    });
+    console.log(airports)
+    for (let code in airports){
+        let airport = airports[code]
+        createMarker(airport["latitude"], airport["longitude"], airport);
+    }
 }
 
 // Permite crear un marcador en un determinado punto del mapa
-function createMarker(latitude, longitude) {
+function createMarker(latitude, longitude, airport) {
     const marker = L.marker([latitude, longitude], {icon: createMarkerIcon() });
+
+    marker.on('mouseover', function (e) {
+        displayContextMenu(e.latlng, airport);
+    });
+
     markersMap[`${latitude},${longitude}`] = marker;
+    marker.addTo(map);
+
     return marker;
 }
 
 /* ==================================
                Utilidades 
    ================================== */ 
+
 function createMarkerIcon(isActive = false) {
     return L.divIcon({
       className: isActive ? 'plane-icon active' : 'plane-icon',
       html: '<i class="fa-solid fa-plane" style="color:#FAFAFA; font-size:20px;"></i>',
       iconSize: [20, 20]
     });
+}
+
+function coordsToPixel(latlng) {
+    const point = map.latLngToContainerPoint(latlng);
+    return { x: point.x + 280, y: point.y -40};
+}
+
+function displayContextMenu(latlng, airport){
+    const contextMenu = document.getElementById('info-context-menu');
+    if ( contextMenu ) contextMenu.remove();
+    
+    const infoContextMenu = document.createElement('div');
+    infoContextMenu.id = 'info-context-menu';
+    console.log(airport)
+    infoContextMenu.textContent = airport["name"];
+
+    infoContextMenu.style.left = coordsToPixel(latlng).x + 'px';
+    infoContextMenu.style.top = coordsToPixel(latlng).y + 'px';
+    
+    document.body.appendChild(infoContextMenu);
 }
