@@ -9,7 +9,8 @@ class Graph():
     def add_vertex(self, adjacent:list=[]):
         self.size += 1
         self.adjacency.append([])
-        [self.add_edge(self.size - 1, em) for em in adjacent]     
+        [self.add_edge(self.size - 1, em) for em in adjacent]
+
     def add_edge(self, source, destiny, weight: int = 1):
         if 0 <= source < self.size and 0 <= destiny < self.size:
             if destiny not in [dest for dest, _ in self.adjacency[source]]:

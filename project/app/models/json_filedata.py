@@ -34,6 +34,8 @@ class JSON_FileData():
     
     def __init__(self, filepath:str):
 
+        self.filepath = filepath
+
         self.data:dict = {}
         with open(filepath, encoding="utf-8") as file:
             self.data = json.load(file)
@@ -57,6 +59,8 @@ class JSON_FileData():
         connections = []
         for code, airport in d.items():
             for connected_code in airport['connections']:
+                if connected_code not in self.code_list:
+                    continue
                 lat1, lon1 = airport['latitude'], airport['longitude']
                 lat2, lon2 = d[connected_code]['latitude'], d[connected_code]['longitude']
                 dist = self.calculate_distances(lat1, lon1, lat2, lon2)
@@ -86,7 +90,41 @@ class JSON_FileData():
         # Distancia final en kilómetros
         distancia = R * c
         return distancia
-
     
+    #Metodos para manipular el JSON y el grafo asociado -------
+
+    def add_airport(self, code:str, location:dict):
+        if code in self.code_list:
+            return
+        elif code in list(self.code_dict.items):
+            return # TODO: If code existed at some point then re-add data from base json
+        
+        self.code_dict[code] = len(self.code_list) # Adds the new code to the dict
+        self.code_list.append(code)
+        
+
+
+
+    #Remove an airport and its connections from the code_list and associated json
+    def remove_airport(self, code:str):
+
+        if code not in self.code_list:
+            return
+        
+        index:int = self.code_dict[code]
+
+        #self.code_dict.pop(code)  # --- dict needs to always know what airport belongs to what index (?)
+        self.code_list.remove(code) # -- list needs to forget code so its connections can be wiped 
+        self.data[code]['connections'] = ["404"]
+        self.connections = self.get_connections(self.data)
+
+        jsob = json.dumps(self.data, indent=4)
+        self.write_to(self.filepath, jsob) # write to the json file
+        
+        #self.graph.remove(index)
+
+    def write_to(self, path:str, jsob):
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(jsob)
 
         

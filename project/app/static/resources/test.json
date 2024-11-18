@@ -1,0 +1,27 @@
+{
+    "BOG": {
+        "name": "El Dorado International Airport",
+        "latitude": 4.7016,
+        "longitude": -74.1469,
+        "city": "Bogot\u00e1",
+        "international": true,
+        "connections": ["ADZ", "VGZ", "PCR", "LET", "SVI", "VVC", "EOH", "BGA", "EJA", "IBE", "PPN", "IPI", "CUC", "CTG", "CLO", "AXM", "UIB", "MTR", "PUU", "EYP", "APO", "VUP", "BAQ", "PSO", "RCH", "AUC", "BUN", "FLA", "NVA", "SJE", "MVP", "MZL", "RVE", "SMR", "MDE", "TME", "PEI", "CZU", "PDA"]
+    },
+    "MDE": {
+        "name": "Jos\u00e9 Mar\u00eda C\u00f3rdova International Airport",
+        "latitude": 6.1645,
+        "longitude": -75.4231,
+        "city": "Medell\u00edn",
+        "international": true,
+        "connections": [
+            "BGA",
+            "CLO",
+            "ADZ",
+            "SMR",
+            "BAQ",
+            "BOG",
+            "CUC",
+            "CTG"
+        ]
+    }
+}
