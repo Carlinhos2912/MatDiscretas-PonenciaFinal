@@ -131,6 +131,7 @@ class JSON_FileData():
             #Early return if any of the codes isnt in the graph
             return
         
+        #Calculate distance, append them to the connections list
         lat1, long1 = self.data[to]['latitude'], self.data[to]['longitude']
         lat2, long2 = self.data[frm]['latitude'], self.data[frm]['longitude']
         dist:float = self.calculate_distances(lat1, long1, lat2, long2)
@@ -140,13 +141,13 @@ class JSON_FileData():
         self.connections.append(tofrm)
         self.connections.append(frmto)
 
+        #Add connections to the JSON, write em
         self.data[to]['connections'].append(frm)
         self.data[frm]['connections'].append(to)
 
         self.write_to(self.filepath, self.data)
 
-
-        
+        #TODO: Update graph.adjacency
 
     def remove_connection(self, to:str, frm:str):
         if to not in self.code_list or frm not in self.code_list: 
@@ -157,6 +158,14 @@ class JSON_FileData():
             con = self.connections[index]
             if (to == con[0] and frm == con[1]) or (to == con[1] and frm == con[0]):
                 self.connections.pop(index)
+        
+        #Remove connections from the JSON, update
+        self.data[to]['connections'].remove(frm)
+        self.data[frm]['connections'].remove(to)
+
+        self.write_to(self.filepath, self.data)
+
+        #TODO: Update graph.adjacency
         
 
     # utils -------------
