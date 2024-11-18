@@ -102,11 +102,13 @@ class JSON_FileData():
         self.code_dict[code] = len(self.code_list) # Adds the new code to the dict
         self.code_list.append(code) # -------------- Adds the new code to the list
         self.data[code] = airport_data # ----------- Appends the airport data to its own entry in the data dict
-        self.connections = self.get_connections(self.data) # Recalculate distances
-
-        #TODO: add adyacencies to self.graph
+        self.connections = self.get_connections(self.data) # Recalculate distances (could just calculate new connections)
 
         self.write_to(self.filepath, self.data) # -- Write data dict to the json file
+        
+        if code in list(self.code_dict.items):
+            return #Gotta calculate the distances from re-added connections so a refactor of the above is necessary
+        self.graph.add_vertex([self.code_dict[cod] for cod in self.data[code]['connections'] if cod in self.code_list])
         
 
     #Remove an airport and its connections from the code_list and associated json
@@ -120,7 +122,7 @@ class JSON_FileData():
         #self.code_dict.pop(code)  # --- dict needs to always know what airport belongs to what index, so keep this commented (?)
         self.code_list.remove(code) # -- list needs to forget code so its connections can be wiped 
         self.data[code]['connections'] = ["404"]
-        self.connections = self.get_connections(self.data)
+        self.connections = self.get_connections(self.data) # Could just remove deprecated connections
 
         self.write_to(self.filepath, self.data)
         

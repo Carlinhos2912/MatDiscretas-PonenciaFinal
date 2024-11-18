@@ -63,5 +63,18 @@
             "CTG",
             "BOG"
         ]
+    },
+    "CTG": {
+        "name": "Rafael N\u00fa\u00f1ez International Airport",
+        "latitude": 10.4424,
+        "longitude": -75.513,
+        "city": "Cartagena",
+        "international": true,
+        "connections": [
+            "BOG",
+            "ADZ",
+            "MDE",
+            "CLO"
+        ]
     }
 }

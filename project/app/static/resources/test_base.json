@@ -14,5 +14,13 @@
       "city": "Medellín",
       "international": true,
       "connections": ["BGA", "CLO", "ADZ", "SMR", "BAQ", "BOG", "CUC", "CTG"]
-    }
+    },
+    "CTG": {
+    "name": "Rafael Núñez International Airport",
+    "latitude": 10.4424,
+    "longitude": -75.513,
+    "city": "Cartagena",
+    "international": true,
+    "connections": ["BOG", "ADZ", "MDE", "CLO"]
+  }
 }
