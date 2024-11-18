@@ -127,17 +127,43 @@ class JSON_FileData():
         #self.graph.remove(index) TODO: Wipe airport adyacencies on graph.adjacency[index]
 
     def add_connection(self, to:str, frm:str):
-        if to not in self.code_list or frm not in self.code_list:
+        if to not in self.code_list or frm not in self.code_list: 
+            #Early return if any of the codes isnt in the graph
             return
+        
+        lat1, long1 = self.data[to]['latitude'], self.data[to]['longitude']
+        lat2, long2 = self.data[frm]['latitude'], self.data[frm]['longitude']
+        dist:float = self.calculate_distances(lat1, long1, lat2, long2)
+
+        tofrm, frmto = (to, frm, dist), (frm, to, dist)
+
+        self.connections.append(tofrm)
+        self.connections.append(frmto)
+
+        self.data[to]['connections'].append(frm)
+        self.data[frm]['connections'].append(to)
+
+        self.write_to(self.filepath, self.data)
+
+
         
 
     def remove_connection(self, to:str, frm:str):
-        pass
+        if to not in self.code_list or frm not in self.code_list: 
+            #Early return if any of the codes isnt in the graph
+            return
+        
+        for index in range(len(self.connections)): # Remove connection from self.connections
+            con = self.connections[index]
+            if (to == con[0] and frm == con[1]) or (to == con[1] and frm == con[0]):
+                self.connections.pop(index)
+        
 
     # utils -------------
     def write_to(self, path:str, d:dict):
         jsob = json.dumps(d, indent=4)
         with open(path, "w", encoding="utf-8") as file:
             file.write(jsob)
+            file.close()
 
         

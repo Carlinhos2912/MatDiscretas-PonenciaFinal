@@ -2,8 +2,7 @@ from models.json_filedata import JSON_FileData
 from models.graph import Graph
 from utils import json_to_graph
 
-if __name__ == "__main__":
-    
+def airport_json_test():
     # JSON test -- every READ is done with a different JSON_FileData instance for rigor. Alternatively, a JSON_FileData.update() could be written
     filedata = JSON_FileData("project/app/static/resources/test.json")
     debug_bog:dict = filedata.data["BOG"] # READ
@@ -28,4 +27,20 @@ if __name__ == "__main__":
     print(filedata_f.data["BOG"]["connections"])
 
     #grafito = json_to_graph(filedata)
+
+if __name__ == "__main__":
+
+    #airport_json_test()
+
+    filedata:JSON_FileData = JSON_FileData("project/app/static/resources/test.json")
+
+    print("Are BOG and MDE connected?: (before addition)")
+    print("BOG" in filedata.data["MDE"]['connections'])
+
+    filedata.add_connection("BOG", "MDE")
+
+    print("Are BOG and MDE connected?: (after addition)")
+    print("BOG" in filedata.data["MDE"]['connections'])
+
+
 

@@ -40,11 +40,11 @@
             "MZL",
             "RVE",
             "SMR",
-            "MDE",
             "TME",
             "PEI",
             "CZU",
-            "PDA"
+            "PDA",
+            "MDE"
         ]
     },
     "MDE": {
@@ -59,9 +59,9 @@
             "ADZ",
             "SMR",
             "BAQ",
-            "BOG",
             "CUC",
-            "CTG"
+            "CTG",
+            "BOG"
         ]
     }
 }
