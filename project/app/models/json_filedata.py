@@ -209,4 +209,31 @@ class JSON_FileData():
             file.write(jsob)
             file.close()
 
+    #Fetch the codes that make up the shortest path between two nodes, return in a list [ ( (frm, to), dist ) ]
+    def get_codes_of_path(self, graph:Graph , src:str, dst:str) -> list:
+
+        path_list:list = []
+
+        #Get source and destination airport indices
+        in_source:int = self.code_dict.get(src)
+        in_destination:int = self.code_dict.get(dst)
+
+        #Perform djikstra to walk the path
+        dijkstra_path:tuple[list, int] = graph.dijkstra(in_source, in_destination)
+        #print(dijkstra_path)
+
+        path_length:int = len(dijkstra_path[0])
+
+        for i in range(path_length-1):
+            #Grab ends of edge to build a tuple with the form ((frm, to), dst)
+            frm:str = self.code_list[dijkstra_path[0][i][0]]
+            to:str = self.code_list[dijkstra_path[0][i+1][0]]
+
+            lat1, lon1 = self.data[frm]['latitude'], self.data[frm]['longitude']
+            lat2, lon2 = self.data[to]['latitude'], self.data[to]['longitude']
+
+            path_list.append(((frm, to), self.calculate_distances(lat1, lon1, lat2, lon2)))
+        
+        return path_list
+
         
