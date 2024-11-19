@@ -2,6 +2,7 @@ import json
 import math
 
 from .graph import Graph
+from ..utils.json_parser import copy_json
 
 class JSON_FileData():
     """
@@ -33,6 +34,7 @@ class JSON_FileData():
     """
     
     def __init__(self, filepath:str):
+        copy_json("project/app/static/resources/base_airports_data.json", filepath)
 
         self.filepath = filepath
 
@@ -126,13 +128,16 @@ class JSON_FileData():
         self.connections.append(bidirection)
 
         self.write_to("project/app/static/resources/extended_airports_data.json", self.data) # -- Write data dict to the json file
-
-        if code in self.code_dict:
+        print(self.graph.size)
+    
+        if code in self.code_dict.keys():
             #If the airport already has an index, just update its adjacencies
             [self.graph.add_edge(self.code_dict[con[0]], self.code_dict[con[1]], con[2]) for con in newconnections]
         else:
             #If not, add a new vertex with its newconnections. this vertex's index should line up with self.code_list and code_dict.
             self.graph.add_vertex([(self.code_dict[con[1]], con[2]) for con in newconnections])
+            print(self.graph.size)
+
         
         
 
@@ -159,6 +164,7 @@ class JSON_FileData():
 
 
 
+
     def add_connection(self, to:str, frm:str):
 
         if to not in self.code_list or frm not in self.code_list: 
@@ -182,24 +188,29 @@ class JSON_FileData():
         self.write_to(self.filepath, self.data)
 
         self.graph.add_edge(self.code_dict[frm], self.code_dict[to], dist)
-
-    def remove_connection(self, to:str, frm:str):
+    
+    def remove_connection(self, to: str, frm: str):
         if to not in self.code_list or frm not in self.code_list: 
-            #Early return if any of the codes isnt in the graph
+            # Early return if any of the codes isn't in the graph
             return
-        
-        for index in range(len(self.connections)): # Remove connection from self.connections
-            con = self.connections[index]
-            if (to == con[0] and frm == con[1]) or (to == con[1] and frm == con[0]):
-                self.connections.pop(index)
-        
-        #Remove connections from the JSON, update
+    
+        # Remove the connection from self.connections
+        self.connections = [con for con in self.connections if not (
+            (to == con[0] and frm == con[1]) or (to == con[1] and frm == con[0])
+        )]
+    
+        # Remove connections from the JSON data and update
+        print(self.data[to]['connections'])
+        print(self.data[frm]['connections'])
         self.data[to]['connections'].remove(frm)
         self.data[frm]['connections'].remove(to)
-
+    
+        # Save the updated data
         self.write_to(self.filepath, self.data)
-
+    
+        # Remove the edge from the graph
         self.graph.remove_edge(self.code_dict[frm], self.code_dict[to])
+
         
 
     # utils -------------
@@ -215,19 +226,19 @@ class JSON_FileData():
         path_list:list = []
 
         #Get source and destination airport indices
-        in_source:int = self.code_dict.get(src)
-        in_destination:int = self.code_dict.get(dst)
+        in_source:int = self.code_dict[src]
+        in_destination:int = self.code_dict[dst]
 
         #Perform djikstra to walk the path
         dijkstra_path:tuple[list, int] = graph.dijkstra(in_source, in_destination)
-        #print(dijkstra_path)
+        print(dijkstra_path)
 
         path_length:int = len(dijkstra_path[0])
 
         for i in range(path_length-1):
             #Grab ends of edge to build a tuple with the form ((frm, to), dst)
-            frm:str = self.code_list[dijkstra_path[0][i][0]]
-            to:str = self.code_list[dijkstra_path[0][i+1][0]]
+            frm:str = self.code_list[dijkstra_path[0][i]]
+            to:str = self.code_list[dijkstra_path[0][i+1]]
 
             lat1, lon1 = self.data[frm]['latitude'], self.data[frm]['longitude']
             lat2, lon2 = self.data[to]['latitude'], self.data[to]['longitude']

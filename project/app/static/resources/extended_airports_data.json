@@ -167,9 +167,7 @@
         "international": true,
         "connections": [
             "BOG",
-            "MDE",
-            "LET",
-            "RCH"
+            "MDE"
         ]
     },
     "AXM": {
@@ -179,21 +177,18 @@
         "city": "Armenia",
         "international": true,
         "connections": [
-            "BOG",
-            "RVE"
+            "BOG"
         ]
     },
     "LET": {
         "name": "Alfredo Vásquez Cobo International Airport",
-        "latitude": 4.1935,
-        "longitude": -69.9431,
+        "latitude": -3.318760334801997,
+        "longitude": -69.87579376114384,
         "city": "Leticia",
         "international": true,
         "connections": [
             "BOG",
-            "LPD",
-            "CUC",
-            "EYP"
+            "LPD"
         ]
     },
     "MTR": {
@@ -214,8 +209,7 @@
         "city": "Riohacha",
         "international": false,
         "connections": [
-            "BOG",
-            "CUC"
+            "BOG"
         ]
     },
     "APO": {
@@ -387,8 +381,7 @@
         "city": "Neiva",
         "international": false,
         "connections": [
-            "BOG",
-            "PAS"
+            "BOG"
         ]
     },
     "NQU": {
@@ -458,9 +451,7 @@
         "longitude": -72.3844,
         "city": "Morelia",
         "international": false,
-        "connections": [
-            "PIL"
-        ]
+        "connections": []
     },
     "PDA": {
         "name": "Aeropuerto César Gaviria Trujillo",
@@ -533,8 +524,8 @@
     },
     "LPD": {
         "name": "Aeropuerto La Pedrera",
-        "latitude": 1.3286,
-        "longitude": -69.5794,
+        "latitude": -1.3255556,
+        "longitude": -69.581389,
         "city": "La Pedrera",
         "international": false,
         "connections": [
@@ -548,8 +539,7 @@
         "city": "Yopal",
         "international": false,
         "connections": [
-            "BOG",
-            "LET"
+            "BOG"
         ]
     },
     "TME": {
@@ -601,8 +591,7 @@
         "international": false,
         "connections": [
             "BOG",
-            "TME",
-            "AXM"
+            "TME"
         ]
     },
     "CZU": {
@@ -623,57 +612,6 @@
         "international": false,
         "connections": [
             "CLO"
-        ]
-    },
-    "PPP": {
-        "name": "Pilin",
-        "latitude": 5.156598738411155,
-        "longitude": -69.95952874774075,
-        "city": "undetermined",
-        "international": false,
-        "connections": [
-            "PCR"
-        ]
-    },
-    "BBB": {
-        "name": "Bob",
-        "latitude": 5.244127581489541,
-        "longitude": -69.95952874774075,
-        "city": "undetermined",
-        "international": false,
-        "connections": [
-            "PCR"
-        ]
-    },
-    "PIL": {
-        "name": "Pilin Táctico",
-        "latitude": 0.10986321392741416,
-        "longitude": -72.57371209571197,
-        "city": "undetermined",
-        "international": false,
-        "connections": [
-            "PGT",
-            "POL"
-        ]
-    },
-    "POL": {
-        "name": "Polilla Táctica",
-        "latitude": 1.6696855009865839,
-        "longitude": -71.56310351877175,
-        "city": "undetermined",
-        "international": false,
-        "connections": [
-            "PIL"
-        ]
-    },
-    "PAS": {
-        "name": "Que Pasa Tronco",
-        "latitude": 2.745530718801952,
-        "longitude": -69.6078043336414,
-        "city": "undetermined",
-        "international": false,
-        "connections": [
-            "NVA"
         ]
     }
 }

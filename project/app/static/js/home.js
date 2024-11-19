@@ -31,8 +31,9 @@ window.onload = setup;
     ==================================================== */
 function setup() {
     document.getElementById('loader').style.display = 'flex';
-    document.getElementById('fetch-data').addEventListener('click', () => { } );
-    
+    document.getElementById('fetch-data').addEventListener('click', sendPathCodes );
+    sourceCodeHolder.addEventListener('input', updateData );
+    destinationCodeHolder.addEventListener('input', updateData );
     
     initMap();
     initAirportData();
@@ -81,14 +82,14 @@ function initAirportData(jsonPath = '../static/resources/extended_airports_data.
 }
 
 function initAirportsMarkers() {
+    clearMap();
 
-    Object.values(markersMap).forEach(marker => map.removeLayer(marker));
-    Object.keys(markersMap).forEach(key => delete markersMap[key]);
-    
     console.log(airports)
     for (let code in airports){
         let airport = airports[code]
-        createMarker(airport["latitude"], airport["longitude"], code);
+        if (!(airport["connections"].length === 1 && airport["connections"][0] === "404")) {
+            createMarker(airport["latitude"], airport["longitude"], code);
+        }
     }
 }
 
@@ -183,51 +184,58 @@ function highlightAdjacentMarkers(airportCode = null, opacity = 1) {
     }
 }
 
-function renderPath(pathData){
-    var cc = 0;
-    var amount = pathData.length;
-  
+function renderPath(pathData) {
+    clearMap();
+
+    let acum = 0;
     const dropdownList = document.querySelector('.dropdown ul');
     dropdownList.innerHTML = '';
-    
-    // document.querySelector('.distance-container p').textContent = `${pathData[1].toFixed(2)} km`
-    
+
+    let finalCurvedLine = null;
+
     pathData.forEach((entry, i) => {
-        const source   = airports[entry[0][0]];
-        const destiny = airports[entry[0][1]];  
-            
-        var city = source.name;
-        var country = source.city;
-        var anotherCity = destiny.name;
-        var anotherCountry = destiny.city;
-    
-        var latitude = source.latitude;
-        var longitude = source.longitude;
-        var anotherLatitude = destiny.latitude;
-        var anotherLongitude = destiny.longitude;
-    
-        createMarker(latitude, longitude).addTo(map);
-        if (amount === i + 1) {
-            createMarker(anotherLatitude, anotherLongitude).addTo(map);
-        }
-        
-        const curvedLine = createCurve([latitude,longitude], [anotherLatitude, anotherLongitude])
-        curvedLine.addTo(map);
-    
-        if (cc === 0) {
-            cc++;
-            curvedLine.bindTooltip(`${pathData[1].toFixed(2)} km`, {
-            permanent: true,  
-            direction: 'center',
-            className: 'polyline-label'
-            }).openTooltip();
+        const source = airports[entry[0][0]];
+        const destiny = airports[entry[0][1]];
+
+        // Extract data
+        const city = source.name;
+        const country = source.city;
+        const anotherCity = destiny.name;
+        const anotherCountry = destiny.city;
+
+        const latitude = source.latitude;
+        const longitude = source.longitude;
+        const anotherLatitude = destiny.latitude;
+        const anotherLongitude = destiny.longitude;
+
+        const sourceMarker = createMarker(latitude, longitude, entry[0][0]);
+        sourceMarker.addTo(map);
+
+        if (i === pathData.length - 1) {
+            const destMarker = createMarker(anotherLatitude, anotherLongitude, entry[0][1]);
+            destMarker.addTo(map);
         }
 
+        const curvedLine = createCurve([latitude, longitude], [anotherLatitude, anotherLongitude]);
+        curvedLine.addTo(map);
+
+        finalCurvedLine = curvedLine; 
+
         const weight = entry[1];
-    
-        createPathDropdownItem(sourceCode, destinationCode, weight, city, country, anotherCity, anotherCountry); 
-        });
+        acum += weight;
+
+        createPathDropdownItem(entry[0][0], entry[0][1], weight, city, country, anotherCity, anotherCountry);
+    });
+
+    if (finalCurvedLine) {
+        finalCurvedLine.bindTooltip(`${acum.toFixed(2)} km`, {
+            permanent: true,
+            direction: 'center',
+            className: 'polyline-label'
+        }).openTooltip();
+    }
 }
+
 
 /* ==================================
                Utilidades 
@@ -258,16 +266,18 @@ function createCurve(start, end) {
 }
 
 function updateData(){
-    document.getElementById("source-city").textContent = airports[sourceCodeHolder.value].name
-    document.getElementById("source-country").textContent = airports[sourceCodeHolder.value].city
-    document.querySelector("#latitude-source h2").textContent = airports[sourceCodeHolder.value].latitude
-    document.querySelector("#longitude-source h2").textContent = airports[sourceCodeHolder.value].longitude
 
+    if (sourceCodeHolder.value.length === 3 && destinationCodeHolder.value.length === 3) {
+        document.getElementById("source-city").textContent = airports[sourceCodeHolder.value].name
+        document.getElementById("source-country").textContent = airports[sourceCodeHolder.value].city
+        document.querySelector("#latitude-source h2").textContent = airports[sourceCodeHolder.value].latitude
+        document.querySelector("#longitude-source h2").textContent = airports[sourceCodeHolder.value].longitude
 
-    document.getElementById("destination-city").textContent = airports[destinationCodeHolder.value].name
-    document.getElementById("destination-country").textContent = airports[destinationCodeHolder.value].city
-    document.querySelector("#latitude-destination h2").textContent = airports[destinationCodeHolder.value].latitude
-    document.querySelector("#longitude-destination h2").textContent = airports[destinationCodeHolder.value].longitude
+        document.getElementById("destination-city").textContent = airports[destinationCodeHolder.value].name
+        document.getElementById("destination-country").textContent = airports[destinationCodeHolder.value].city
+        document.querySelector("#latitude-destination h2").textContent = airports[destinationCodeHolder.value].latitude
+        document.querySelector("#longitude-destination h2").textContent = airports[destinationCodeHolder.value].longitude
+    }
 }
 
 function createPathDropdownItem(sourceCode, destinationCode, distance, city, country, anotherCity, anotherCountry) {
@@ -283,7 +293,20 @@ function createPathDropdownItem(sourceCode, destinationCode, distance, city, cou
     dropdownList.appendChild(item);
 }
 
+function clearMap(){    
+    Object.values(markersMap).forEach(marker => map.removeLayer(marker));
+    Object.keys(markersMap).forEach(key => delete markersMap[key]);
+}
 
+function updateGraphInfo(connected, numComponents, componetsVertexCount){
+    document.getElementById("graph-info-dropdown").innerHTML = `
+            <ul>
+                <li><a href="">${connected ? "Yes" : "No"} <span> Is graph connected</span></a></li>
+                <li><a href="">${numComponents} <span> Number of components</span></a></li>
+                <li><a href="">${componetsVertexCount} <span> Components vertices</span></a></li>
+            </ul>
+    `
+}
 
   /*  
     Menu Custom para realizar acciones
@@ -311,8 +334,6 @@ function createAirportConnected() {
         }
         document.getElementById("map").style.cursor = "grab"
     });
-
-    
 }
 function createConnection(){
     const clickedAirportCode = document.getElementById("custom-menu").dataset.clickedAirport;
@@ -330,10 +351,25 @@ function createConnection(){
     }
 
 }
+function deleteConnection(){
+    const clickedAirportCode = document.getElementById("custom-menu").dataset.clickedAirport;
+    let availableAirports = airports[clickedAirportCode]?.connections || []; 
 
-function deleteConnection(event){}
 
-function deleteSelf(event){}
+    let userPrompt = prompt(`Available airports:\n${availableAirports}`);
+    if (userPrompt !== null && userPrompt.trim() !== "") {
+        console.log(`User requested: ${userPrompt} from: ${clickedAirportCode}`);
+        sendAirportCodes(clickedAirportCode, userPrompt, "/api/delete-connection")
+    } 
+}
+function deleteSelf(){
+    const clickedAirportCode = document.getElementById("custom-menu").dataset.clickedAirport;
+    const userConfirmed = confirm(`Are you sure to delete [${clickedAirportCode}] ?`)
+
+    if ( userConfirmed === true ){
+        sendAirportCodes(clickedAirportCode,"000", "/api/delete-airport")
+    }
+}
 
 /*
     FETCHS AND API
@@ -374,8 +410,8 @@ function sendAirportData(latitude, longitude, code, name, connection) {
     });
 }
 
-function sendAirportCodes(source, requested){
-    fetch('/api/add-connection', { 
+function sendAirportCodes(source, requested, endpoint = "/api/add-connection"){
+    fetch(endpoint , { 
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -394,10 +430,26 @@ function sendAirportCodes(source, requested){
     .then(data => {
         console.log('Success:', data);
         initAirportData();
+        getGraphInfo();
     })
     .catch(error => {
         console.error('Error:', error); 
     });
+}
+
+async function getGraphInfo(){
+    try {
+      const response = await fetch("/api/get-graph-info");
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log(result);
+      updateGraphInfo(result[0], result[1], result[2])
+    } catch (error) {
+      console.error(error.message);
+    }
 }
 
 async function sendPathCodes() {
@@ -410,7 +462,7 @@ async function sendPathCodes() {
         return;
       }
   
-      const response = await fetch('/api/path', {
+      const response = await fetch('/api/get-path', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -428,8 +480,8 @@ async function sendPathCodes() {
   
       currentMode = 'path';
       pathData = data;
-      renderByMode(); 
+      renderPath(pathData); 
     } catch (error) {
       console.error('Error en la petición:', error);  
     }
-  }
+}

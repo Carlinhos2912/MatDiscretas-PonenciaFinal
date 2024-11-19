@@ -9,6 +9,7 @@ core = Blueprint('core', __name__)
 filedata = JSON_FileData("project/app/static/resources/extended_airports_data.json")
 graph = filedata.graph
 
+
 # =======================================================================================================
 #                                    [ LOG PRINT ]
 [ print(f"{filedata.code_list[index]} -> {graph.adjacency[index]}" ) for index in range(graph.size) ]
@@ -25,7 +26,7 @@ def pathRoute():
     source = data.get('source')
     destination = data.get('destination')
 
-    actual_shorter_path = [(('AAE', 'BBX'), 105),(('AAE', 'BBX'), 145)]
+    actual_shorter_path = filedata.get_codes_of_path(filedata.graph, source, destination)
 
     return jsonify(actual_shorter_path)
 
@@ -55,4 +56,32 @@ def add_connection():
     
     filedata.add_connection(data, code)
     return jsonify({"status": "success", "message": f"Airport {code} added successfully!"})
+
+@api.route("/api/delete-connection", methods=['POST'])
+def delete_connection():
+    code = request.get_json().get("source-code")
+    data = request.get_json().get("requested-code")
+
+    if not data or not code:
+        return jsonify({"status": "error", "message": "Invalid input"}), 400
+    
+    filedata.remove_connection(data, code)
+    return jsonify({"status": "success", "message": f"Airport {code} added successfully!"})
+
+@api.route("/api/delete-airport", methods=['POST'])
+def delete_airport():
+    code = request.get_json().get("source-code")
+    data = request.get_json().get("requested-code")
+
+    if not data:
+        return jsonify({"status": "error", "message": "Invalid input"}), 400
+    
+    filedata.remove_airport(code)
+    return jsonify({"status": "success", "message": f"Airport {code} added successfully!"})
+
+
+@api.route("/api/get-graph-info")
+def get_graph_info():
+    results = graph.num_of_components()
+    return jsonify([results[0] == 1, results[0], results[1]])
 

@@ -33,7 +33,7 @@ class Graph():
             for i in range(len(self.adjacency[source])):
                 edge = self.adjacency[source][i]
                 if edge[0] == destination:
-                    self.adjacency.pop(edge)
+                    self.adjacency.pop(destination)
             
             self.adjacency[source].sort()
             
