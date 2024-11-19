@@ -183,6 +183,52 @@ function highlightAdjacentMarkers(airportCode = null, opacity = 1) {
     }
 }
 
+function renderPath(pathData){
+    var cc = 0;
+    var amount = pathData.length;
+  
+    const dropdownList = document.querySelector('.dropdown ul');
+    dropdownList.innerHTML = '';
+    
+    // document.querySelector('.distance-container p').textContent = `${pathData[1].toFixed(2)} km`
+    
+    pathData.forEach((entry, i) => {
+        const source   = airports[entry[0][0]];
+        const destiny = airports[entry[0][1]];  
+            
+        var city = source.name;
+        var country = source.city;
+        var anotherCity = destiny.name;
+        var anotherCountry = destiny.city;
+    
+        var latitude = source.latitude;
+        var longitude = source.longitude;
+        var anotherLatitude = destiny.latitude;
+        var anotherLongitude = destiny.longitude;
+    
+        createMarker(latitude, longitude).addTo(map);
+        if (amount === i + 1) {
+            createMarker(anotherLatitude, anotherLongitude).addTo(map);
+        }
+        
+        const curvedLine = createCurve([latitude,longitude], [anotherLatitude, anotherLongitude])
+        curvedLine.addTo(map);
+    
+        if (cc === 0) {
+            cc++;
+            curvedLine.bindTooltip(`${pathData[1].toFixed(2)} km`, {
+            permanent: true,  
+            direction: 'center',
+            className: 'polyline-label'
+            }).openTooltip();
+        }
+
+        const weight = entry[1];
+    
+        createPathDropdownItem(sourceCode, destinationCode, weight, city, country, anotherCity, anotherCountry); 
+        });
+}
+
 /* ==================================
                Utilidades 
    ================================== */ 
@@ -224,7 +270,22 @@ function updateData(){
     document.querySelector("#longitude-destination h2").textContent = airports[destinationCodeHolder.value].longitude
 }
 
-/*  
+function createPathDropdownItem(sourceCode, destinationCode, distance, city, country, anotherCity, anotherCountry) {
+    const dropdownList = document.querySelector('.dropdown ul');
+    const item = document.createElement('li');
+  
+    item.innerHTML = `
+                  <a href="" target="_self">${sourceCode} <span>${city},${country}</span></a>
+                  <span class="sep-distance"> -----------> <i class="fa-solid fa-plane"> <span>${distance.toFixed(0)}km</span></i></span>
+                  <a href="" target="_self">${destinationCode} <span>${anotherCity},${anotherCountry}</span></a>
+    `;
+  
+    dropdownList.appendChild(item);
+}
+
+
+
+  /*  
     Menu Custom para realizar acciones
 */
 
@@ -271,6 +332,7 @@ function createConnection(){
 }
 
 function deleteConnection(event){}
+
 function deleteSelf(event){}
 
 /*
@@ -337,3 +399,37 @@ function sendAirportCodes(source, requested){
         console.error('Error:', error); 
     });
 }
+
+async function sendPathCodes() {
+    try {
+      const readId1 = document.getElementById('read-id-1').value;
+      const readId2 = document.getElementById('read-id-2').value;
+  
+      if (!readId1 || !readId2) {
+        console.warn('Ambos campos de aeropuertos deben estar completos.');
+        return;
+      }
+  
+      const response = await fetch('/api/path', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: readId1,
+          destination: readId2
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error en la respuesta de la API: ${response.status}`);
+      }
+  
+      const data = await response.json();  
+      console.log(data)
+  
+      currentMode = 'path';
+      pathData = data;
+      renderByMode(); 
+    } catch (error) {
+      console.error('Error en la petición:', error);  
+    }
+  }

@@ -19,6 +19,16 @@ graph = filedata.graph
 def home():
     return render_template('index.html')
 
+@api.route("/api/get-path", methods=["POST"])
+def pathRoute():
+    data = request.get_json()
+    source = data.get('source')
+    destination = data.get('destination')
+
+    actual_shorter_path = [(('AAE', 'BBX'), 105),(('AAE', 'BBX'), 145)]
+
+    return jsonify(actual_shorter_path)
+
 
 @api.route("/api/add-airport", methods=['POST'])
 def add_airport():
