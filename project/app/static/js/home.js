@@ -54,7 +54,7 @@ function initMap() {
     
     map.on('click', function () {
         const contextMenu = document.getElementById("custom-menu");
-        contextMenu.classList.add("hidden"); // Hide the menu
+        contextMenu.classList.add("hidden");
     });
 
     L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=hy6pxKK5t7s7HqMLzBmCy43uRvPkUPPIAsipdlRUGDb5haPR3AdwzgpriCtOPVbB', {
@@ -84,6 +84,10 @@ function initAirportData(jsonPath = '../static/resources/extended_airports_data.
 }
 
 function initAirportsMarkers() {
+
+    Object.values(markersMap).forEach(marker => map.removeLayer(marker));
+    Object.keys(markersMap).forEach(key => delete markersMap[key]);
+    
     console.log(airports)
     for (let code in airports){
         let airport = airports[code]
@@ -226,7 +230,60 @@ function updateData(){
     Menu Custom para realizar acciones
 */
 
-function createAirportConnected(event) {}
+function createAirportConnected(event) {
+    document.getElementById("map").style.cursor = "crosshair"
+    document.getElementById("custom-menu").classList.add("hidden");
+    isSelecting = true;
+
+    map.once('click', function(e) {
+        isSelecting = false
+        const { lat, lng } = e.latlng;
+        initAirportData();
+        prompt(`  Latitude: ${lat}\n  Longitude${lng}\n\nSet a name and a code for the airport as the example\n   "[AAA] Aeropuerto internacional"`)
+        document.getElementById("map").style.cursor = "grab"
+    });
+
+    
+}
 function createConnection(event){}
 function deleteConnection(event){}
 function deleteSelf(event){}
+
+/*
+    FETCHS AND API
+*/
+
+function sendAirportData(latitude, longitude, code, name, connection) {
+    // Create the data dictionary to send
+    const dataDict = {
+        name: name,
+        latitude: latitude,
+        longitude: longitude,
+        city: "undetermined",
+        international: false,
+        connections: [connection]
+    };
+
+    fetch('http://127.0.0.1:5000/api/add-airport', { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            code: code,       
+            airport_data: dataDict 
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add airport');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error); 
+    });
+}

@@ -20,6 +20,16 @@ def home():
     return render_template('index.html')
 
 
-@api.route("/api/get-graph")
-def get_graph():
-    return json_to_dict
+@api.route("/api/add-airport", methods=['POST'])
+def add_airport():
+    data = request.get_json()  
+    code = data.get("code")  
+    data_dict = data.get("airport_data")  
+
+    if not code or not data_dict:
+        return jsonify({"status": "error", "message": "Invalid input"}), 400
+
+    filedata.add_airport(code, data_dict)
+    print(f"Added airport: {code} -> {data_dict}") 
+
+    return jsonify({"status": "success", "message": f"Airport {code} added successfully!"})
