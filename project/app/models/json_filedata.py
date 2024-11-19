@@ -102,13 +102,33 @@ class JSON_FileData():
         self.code_dict[code] = len(self.code_list) # Adds the new code to the dict
         self.code_list.append(code) # -------------- Adds the new code to the list
         self.data[code] = airport_data # ----------- Appends the airport data to its own entry in the data dict
-        self.connections = self.get_connections(self.data) # Recalculate distances (could just calculate new connections)
+
+        #Instead of recalculating every distance again, just go over the new connections
+        #newconnections go from the inserted vertex to the others, bidirection goes the other way.
+        #These lists are different because only newconnections will be used to update the graph. 
+        newconnections:list[tuple] = []
+        bidirection:list[tuple] = []
+        lat1, long1 = self.data[code]['latitude']['longitude']
+        for dest in self.data[code]['connections']:
+            lat2, long2 = self.data[dest]['latitude']['longitude']
+            dist = self.calculate_distances(lat1, long1, lat2, long2)
+
+            newconnections.append((code, dest, dist))
+            bidirection.append((dest, code, dist))
+
+            self.data[dest]['connections'].append(code) # Destination airport needs its connections updated
+
+        self.connections.append(newconnections)
+        self.connections.append(bidirection)
 
         self.write_to(self.filepath, self.data) # -- Write data dict to the json file
-        
-        if code in list(self.code_dict.items):
-            return #Gotta calculate the distances from re-added connections so a refactor of the above is necessary
-        self.graph.add_vertex([self.code_dict[cod] for cod in self.data[code]['connections'] if cod in self.code_list])
+
+        if code in list(self.code_dict.items): 
+            #If the airport already has an index, just update its adjacencies
+            [self.graph.add_edge(self.code_dict[con[0]], self.code_dict[con[1]], con[2]) for con in newconnections]
+        else:
+            #If not, add a new vertex with its newconnections. this vertex's index should line up with self.code_list and code_dict.
+            self.graph.add_vertex([(self.code_dict[con[1]], con[2]) for con in newconnections])
         
 
     #Remove an airport and its connections from the code_list and associated json
@@ -117,18 +137,23 @@ class JSON_FileData():
         if code not in self.code_list:
             return
         
-        index:int = self.code_dict[code]
-
         #self.code_dict.pop(code)  # --- dict needs to always know what airport belongs to what index, so keep this commented (?)
-        self.code_list.remove(code) # -- list needs to forget code so its connections can be wiped 
-        self.data[code]['connections'] = ["404"]
-        self.connections = self.get_connections(self.data) # Could just remove deprecated connections
+        self.code_list.remove(code) # -- list needs to forget code so its connections can be wiped
+
+        for con in self.data[code]['connections']: # destination airports should wipe deleted airport from its connections
+            self.data[con]['connections'].remove(code)
+
+        self.data[code]['connections'] = ["404"] # --- flag value that denotes deletion status
+
+        self.connections = self.get_connections(self.data) 
+        # ^ searching and removing deprecated connections could take more time, so just recalculate everything ( O(m*n) vs. O(n) ?)
 
         self.write_to(self.filepath, self.data)
         
-        #self.graph.remove(index) TODO: Wipe airport adyacencies on graph.adjacency[index]
+        self.graph.supress_vertex(self.code_dict[code])
 
     def add_connection(self, to:str, frm:str):
+
         if to not in self.code_list or frm not in self.code_list: 
             #Early return if any of the codes isnt in the graph
             return
@@ -149,7 +174,7 @@ class JSON_FileData():
 
         self.write_to(self.filepath, self.data)
 
-        #TODO: Update graph.adjacency
+        self.graph.add_edge(frm, to, dist)
 
     def remove_connection(self, to:str, frm:str):
         if to not in self.code_list or frm not in self.code_list: 
@@ -167,7 +192,7 @@ class JSON_FileData():
 
         self.write_to(self.filepath, self.data)
 
-        #TODO: Update graph.adjacency
+        self.graph.remove_edge(self.code_dict[frm], self.code_dict[to])
         
 
     # utils -------------

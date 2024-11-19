@@ -6,20 +6,43 @@ class Graph():
         self.adjacency: list[list[tuple[int, int]]] = [[] for _ in range(self.size)] 
 
     # Operaciones del grafo ===============================================================================
-    def add_vertex(self, adjacent:list=[]):
+    def add_vertex(self, adjacent:list[tuple[int, float]]=[]):
         self.size += 1
         self.adjacency.append([])
-        [self.add_edge(self.size - 1, em) for em in adjacent]
+        for em in adjacent: # add_edge validates the existance of em[0] (destination)
+            self.add_edge(em[0], em[1])
 
-    def add_edge(self, source, destiny, weight: int = 1):
-        if 0 <= source < self.size and 0 <= destiny < self.size:
-            if destiny not in [dest for dest, _ in self.adjacency[source]]:
-                self.adjacency[source].append((destiny, weight))
+    def add_edge(self, source:int, destination:int, weight: float = 1.0):
+        if 0 <= source < self.size and 0 <= destination < self.size:
+            if destination not in [dest for dest, _ in self.adjacency[source]]:
+                self.adjacency[source].append((destination, weight))
                 self.adjacency[source].sort()
 
-            if destiny not in [dest for dest, _ in self.adjacency[destiny]] and not self.directed:
-                self.adjacency[destiny].append((source, weight))
-                self.adjacency[destiny].sort()
+            if source not in [dest for dest, _ in self.adjacency[destination]] and not self.directed:
+                self.adjacency[destination].append((source, weight))
+                self.adjacency[destination].sort()
+    
+    # Vertex deletion would screw up index mapping, so prefer just isolating it from everything else.
+    # Isolated vertices can be distinguished from deleted vertices through the JSON every airport is stored in.
+    def supress_vertex(self, vertex:int):
+        if 0 <= vertex < self.size:
+            self.adjacency[vertex] = []
+
+    def remove_edge(self, source:int, destination:int):
+        if 0 <= source < self.size and 0 <= destination < self.size:
+            for i in range(len(self.adjacency[source])):
+                edge = self.adjacency[source][i]
+                if edge[0] == destination:
+                    self.adjacency.pop(edge)
+            
+            self.adjacency[source].sort()
+            
+            for i in range(len(self.adjacency[destination])):
+                edge = self.adjacency[destination][i]
+                if edge[0] == source:
+                    self.adjacency.pop(edge)
+            
+            self.adjacency[destination].sort()
     
     # Propiedades Básicas =================================================================================
     def get_matrix(self, kind:str='adjacency'):
@@ -74,6 +97,7 @@ class Graph():
             components += 1
             num_of_vertices.append(count)
         return components, num_of_vertices
+    
     def has_cycles(self) -> bool:
         visited = []
         stack = []
@@ -161,6 +185,7 @@ class Graph():
             return path(parents,target), distances[target]
 
         return distances, parents
+    
     def floyd_warshall(self, source:int=None, target:int=None):
         #Crear matriz Distance y Paths
         paths = self.get_matrix('path-template')
