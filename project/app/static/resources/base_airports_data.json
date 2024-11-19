@@ -44,7 +44,11 @@
             "TME",
             "PEI",
             "CZU",
-            "PDA"
+            "PDA", 
+            "CAQ",
+            "LMC",
+            "LMN", 
+            "PGT"
         ]
     },
     "MDE": {
@@ -61,7 +65,11 @@
             "BAQ",
             "BOG",
             "CUC",
-            "CTG"
+            "CTG", 
+            "GYM", 
+            "LMC",
+            "LMN",
+            "PTX"
         ]
     },
     "CTG": {
@@ -259,7 +267,7 @@
         "longitude": -74.056,
         "city": "Bogot\u00e1",
         "international": false,
-        "connections": []
+        "connections": ["MDE"]
     },
     "CAQ": {
         "name": "Aeropuerto Juan H. White",
@@ -267,7 +275,7 @@
         "longitude": -75.1985,
         "city": "Caucasia",
         "international": false,
-        "connections": []
+        "connections": ["BOG"]
     },
     "FLA": {
         "name": "Aeropuerto Gustavo Artunduaga",
@@ -316,7 +324,7 @@
         "longitude": -73.7872,
         "city": "La Chorrera",
         "international": false,
-        "connections": []
+        "connections": ["BOG", "MDE"]
     },
     "MZL": {
         "name": "Aeropuerto La Nubia",
@@ -361,7 +369,7 @@
         "longitude": -72.49,
         "city": "Puerto Carre\u00f1o",
         "international": false,
-        "connections": []
+        "connections": ["BOG", "MDE"]
     },
     "MVP": {
         "name": "Aeropuerto Fabio Alberto Le\u00f3n Bentley",
@@ -411,7 +419,7 @@
         "longitude": -76.0857,
         "city": "Pitalito",
         "international": false,
-        "connections": []
+        "connections": ["MDE"]
     },
     "PPN": {
         "name": "Aeropuerto Guillermo Le\u00f3n Valencia",
@@ -451,7 +459,7 @@
         "longitude": -72.3844,
         "city": "Morelia",
         "international": false,
-        "connections": []
+        "connections": ["BOG"]
     },
     "PDA": {
         "name": "Aeropuerto C\u00e9sar Gaviria Trujillo",

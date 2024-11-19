@@ -37,6 +37,7 @@ function setup() {
     
     initMap();
     initAirportData();
+
 }
 
 function initMap() {
@@ -75,6 +76,7 @@ function initAirportData(jsonPath = '../static/resources/extended_airports_data.
     .then(() => {
         initAirportsMarkers();
         updateData();
+        getGraphInfo();
     })
     .catch((error) => {
         console.error('Error fetching the JSON file:', error);
@@ -296,6 +298,8 @@ function createPathDropdownItem(sourceCode, destinationCode, distance, city, cou
 function clearMap(){    
     Object.values(markersMap).forEach(marker => map.removeLayer(marker));
     Object.keys(markersMap).forEach(key => delete markersMap[key]);
+    curveLayers.forEach(curve => map.removeLayer(curve));
+    curveLayers = [];
 }
 
 function updateGraphInfo(connected, numComponents, componetsVertexCount){
