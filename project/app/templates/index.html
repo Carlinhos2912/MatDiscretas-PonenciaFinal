@@ -31,7 +31,7 @@
             <!-- Información del aeropuerto ( Códigos y botón de búsqueda ) -->
             <div class="plane-info" id="plane-1">
                 <input id="read-id-1" type="text" value="BAQ" maxlength="3" minlength="3" autocomplete="off">
-                <h3 id="source-city">City</h3>
+                <h3 id="source-city" class="moving-text">City</h3>
                 <h4 id="source-country">Country</h4>
             </div>
 
@@ -39,7 +39,7 @@
 
             <div class="plane-info" id="plane-2">
                 <input id="read-id-2" type="text" value="CTG" maxlength="3" minlength="3" autocomplete="off">
-                <h3 id="destination-city">City</h3>
+                <h3 id="destination-city" class="moving-text">City</h3>
                 <h4 id="destination-country">Country</h4>
             </div>
 
@@ -110,8 +110,16 @@
         </div>
     </div>
 
-    <div id="map"></div>
+    <div id="custom-menu" class="">
+        <ul id="menu-actions">
+            <li>Delete Self<i class="fa-solid fa-xmark"></i></li>
+            <li>Delete Self<i class="fa-solid fa-xmark"></i></li>
+            <li>Delete Self<i class="fa-solid fa-xmark"></i></li>
+            <li>Delete Connection<i class="fa-solid fa-caret-right"></i></li>
+        </ul>
+    </div>
 
+    <div id="map"></div>
 
     <script>
         document.querySelectorAll('.menu').forEach(menu => {
