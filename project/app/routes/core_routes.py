@@ -6,7 +6,7 @@ core = Blueprint('core', __name__)
 
 # =======================================================================================================
 
-filedata = JSON_FileData("project/app/static/resources/base_airports_data.json")
+filedata = JSON_FileData("project/app/static/resources/extended_airports_data.json")
 graph = filedata.graph
 
 # =======================================================================================================
@@ -33,3 +33,16 @@ def add_airport():
     print(f"Added airport: {code} -> {data_dict}") 
 
     return jsonify({"status": "success", "message": f"Airport {code} added successfully!"})
+
+
+@api.route("/api/add-connection", methods=['POST'])
+def add_connection():
+    code = request.get_json().get("source-code")
+    data = request.get_json().get("requested-code")
+
+    if not data or not code:
+        return jsonify({"status": "error", "message": "Invalid input"}), 400
+    
+    filedata.add_connection(data, code)
+    return jsonify({"status": "success", "message": f"Airport {code} added successfully!"})
+

@@ -33,12 +33,9 @@ function setup() {
     document.getElementById('loader').style.display = 'flex';
     document.getElementById('fetch-data').addEventListener('click', () => { } );
     
-    sourceCodeHolder.addEventListener('input' , () => { } );
-    destinationCodeHolder.addEventListener('input' , () => { } );
-
+    
     initMap();
     initAirportData();
-
 }
 
 function initMap() {
@@ -75,7 +72,7 @@ function initAirportData(jsonPath = '../static/resources/extended_airports_data.
         airports = data
     })
     .then(() => {
-        initAirportsMarkers()
+        initAirportsMarkers();
         updateData();
     })
     .catch((error) => {
@@ -108,8 +105,7 @@ function createMarker(latitude, longitude, airportCode) {
         map.flyTo([latitude, longitude], 10); 
         
         sourceCodeHolder.value = airportCode
-        document.getElementById("source-city").textContent = airports[airportCode].name
-        document.getElementById("source-country").textContent = airports[airportCode].city
+        updateData();
 
     });
 
@@ -122,6 +118,8 @@ function createMarker(latitude, longitude, airportCode) {
         contextMenu.style.top = `${e.originalEvent.pageY}px`;
     
         contextMenu.classList.remove("hidden");
+
+        contextMenu.dataset.clickedAirport = airportCode;
     
         e.originalEvent.preventDefault();
     });
@@ -230,7 +228,8 @@ function updateData(){
     Menu Custom para realizar acciones
 */
 
-function createAirportConnected(event) {
+function createAirportConnected() {
+    const clickedAirportCode = document.getElementById("custom-menu").dataset.clickedAirport;
     document.getElementById("map").style.cursor = "crosshair"
     document.getElementById("custom-menu").classList.add("hidden");
     isSelecting = true;
@@ -238,14 +237,39 @@ function createAirportConnected(event) {
     map.once('click', function(e) {
         isSelecting = false
         const { lat, lng } = e.latlng;
-        initAirportData();
-        prompt(`  Latitude: ${lat}\n  Longitude${lng}\n\nSet a name and a code for the airport as the example\n   "[AAA] Aeropuerto internacional"`)
+        let userPrompt = prompt(`  Latitude: ${lat}\n  Longitude${lng}\n\nSet a name and a code for the airport as the example\n   "[AAA] Aeropuerto internacional"`)
+
+        if (userPrompt !== null && userPrompt.trim() !== "") {
+            console.log(`User entered: ${userPrompt}`);
+            const match = userPrompt.match(/^\[([^\]]+)\]\s*(.+)$/);
+            if (match) {
+                const code = match[1]; 
+                const name = match[2];
+                sendAirportData(lat, lng, code, name, clickedAirportCode)
+            }
+        }
         document.getElementById("map").style.cursor = "grab"
     });
 
     
 }
-function createConnection(event){}
+function createConnection(){
+    const clickedAirportCode = document.getElementById("custom-menu").dataset.clickedAirport;
+    let currentConnections = airports[clickedAirportCode]?.connections || []; 
+
+    let availableAirports = Object.entries(airports)
+        .filter(([code]) => !currentConnections.includes(code) && code !== clickedAirportCode) 
+        .map(([code, data]) => ` - [${code}]  |  ${data.name}`) 
+        .join("\n");
+
+    let userPrompt = prompt(`Available airports:\n${availableAirports}`);
+    if (userPrompt !== null && userPrompt.trim() !== "") {
+        console.log(`User requested: ${userPrompt} from: ${clickedAirportCode}`);
+        sendAirportCodes(clickedAirportCode, userPrompt)
+    }
+
+}
+
 function deleteConnection(event){}
 function deleteSelf(event){}
 
@@ -254,7 +278,6 @@ function deleteSelf(event){}
 */
 
 function sendAirportData(latitude, longitude, code, name, connection) {
-    // Create the data dictionary to send
     const dataDict = {
         name: name,
         latitude: latitude,
@@ -264,7 +287,7 @@ function sendAirportData(latitude, longitude, code, name, connection) {
         connections: [connection]
     };
 
-    fetch('http://127.0.0.1:5000/api/add-airport', { 
+    fetch('/api/add-airport', { 
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -282,6 +305,33 @@ function sendAirportData(latitude, longitude, code, name, connection) {
     })
     .then(data => {
         console.log('Success:', data);
+        initAirportData();
+    })
+    .catch(error => {
+        console.error('Error:', error); 
+    });
+}
+
+function sendAirportCodes(source, requested){
+    fetch('/api/add-connection', { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            "source-code": source,       
+            "requested-code": requested 
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add connection');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        initAirportData();
     })
     .catch(error => {
         console.error('Error:', error); 

@@ -108,27 +108,32 @@ class JSON_FileData():
         #These lists are different because only newconnections will be used to update the graph. 
         newconnections:list[tuple] = []
         bidirection:list[tuple] = []
-        lat1, long1 = self.data[code]['latitude']['longitude']
+        lat1 = self.data[code]['latitude']
+        long1 = self.data[code]['longitude']
+
         for dest in self.data[code]['connections']:
-            lat2, long2 = self.data[dest]['latitude']['longitude']
+            lat2 = self.data[dest]['latitude']
+            long2 = self.data[dest]['longitude']
             dist = self.calculate_distances(lat1, long1, lat2, long2)
 
             newconnections.append((code, dest, dist))
             bidirection.append((dest, code, dist))
 
-            self.data[dest]['connections'].append(code) # Destination airport needs its connections updated
+            self.data[dest]['connections'].append(code)  # Destination airport needs its connections updated
+
 
         self.connections.append(newconnections)
         self.connections.append(bidirection)
 
-        self.write_to(self.filepath, self.data) # -- Write data dict to the json file
+        self.write_to("project/app/static/resources/extended_airports_data.json", self.data) # -- Write data dict to the json file
 
-        if code in list(self.code_dict.items): 
+        if code in self.code_dict:
             #If the airport already has an index, just update its adjacencies
             [self.graph.add_edge(self.code_dict[con[0]], self.code_dict[con[1]], con[2]) for con in newconnections]
         else:
             #If not, add a new vertex with its newconnections. this vertex's index should line up with self.code_list and code_dict.
             self.graph.add_vertex([(self.code_dict[con[1]], con[2]) for con in newconnections])
+        
         
 
     #Remove an airport and its connections from the code_list and associated json
@@ -152,6 +157,8 @@ class JSON_FileData():
         
         self.graph.supress_vertex(self.code_dict[code])
 
+
+
     def add_connection(self, to:str, frm:str):
 
         if to not in self.code_list or frm not in self.code_list: 
@@ -174,7 +181,7 @@ class JSON_FileData():
 
         self.write_to(self.filepath, self.data)
 
-        self.graph.add_edge(frm, to, dist)
+        self.graph.add_edge(self.code_dict[frm], self.code_dict[to], dist)
 
     def remove_connection(self, to:str, frm:str):
         if to not in self.code_list or frm not in self.code_list: 
@@ -197,7 +204,7 @@ class JSON_FileData():
 
     # utils -------------
     def write_to(self, path:str, d:dict):
-        jsob = json.dumps(d, indent=4)
+        jsob = json.dumps(d, indent=4, ensure_ascii=False)
         with open(path, "w", encoding="utf-8") as file:
             file.write(jsob)
             file.close()
