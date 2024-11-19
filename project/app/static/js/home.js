@@ -70,39 +70,75 @@ function initAirportsMarkers() {
     console.log(airports)
     for (let code in airports){
         let airport = airports[code]
-        createMarker(airport["latitude"], airport["longitude"], airport);
+        createMarker(airport["latitude"], airport["longitude"], code);
     }
 }
 
 // Permite crear un marcador en un determinado punto del mapa
-function createMarker(latitude, longitude, airport) {
-    const marker = L.marker([latitude, longitude], {icon: createMarkerIcon() });
+function createMarker(latitude, longitude, airportCode) {
+    const marker = L.marker([latitude, longitude], { icon: createMarkerIcon() });
 
-    marker.on('mouseover', function (e) {
-        displayContextMenu(e.latlng, airport);
+    markersMap[airportCode] = marker;
+    marker.addTo(map);
+
++    marker.on('click', function () {
+        map.flyTo([latitude, longitude], 10);
     });
 
-    markersMap[`${latitude},${longitude}`] = marker;
-    marker.addTo(map);
+    marker.on('mouseover', function () {
+        const popupContent = `
+            <b><span>${airportCode} | </span>${airports[airportCode].name}</b>
+        `;
+        marker.bindPopup(popupContent).openPopup(); 
+        highlightAdjacentMarkers(airportCode, 0.4); 
+    });
+
+    marker.on('mouseout', function () {
+        marker.closePopup(); 
+        highlightAdjacentMarkers(); 
+    });
 
     return marker;
 }
+
+
+function highlightAdjacentMarkers(airportCode = null, opacity = 1) {
+    for (let key in markersMap) {
+        markersMap[key].setIcon(createMarkerIcon(false, opacity));
+    }
+
+    if (airportCode) {
+        airports[airportCode].connections.forEach(connectionCode => {
+            if (markersMap[connectionCode]) {
+                markersMap[connectionCode].setIcon(createMarkerIcon(true)); // Active icon
+            }
+        });
+
+        if (markersMap[airportCode]) {
+            markersMap[airportCode].setIcon(createMarkerIcon(true)); // Active icon
+        }
+    }
+}
+
+
 
 /* ==================================
                Utilidades 
    ================================== */ 
 
-function createMarkerIcon(isActive = false) {
+function createMarkerIcon(isActive = false, opacity = 1) {
     return L.divIcon({
-      className: isActive ? 'plane-icon active' : 'plane-icon',
-      html: '<i class="fa-solid fa-plane" style="color:#FAFAFA; font-size:20px;"></i>',
-      iconSize: [20, 20]
+        className: isActive ? 'plane-icon active' : 'plane-icon',
+        html: `<i class="fa-solid fa-plane" style="color: #FAFAFA; font-size: 20px; opacity: ${opacity};"></i>`,
+        iconSize: [20, 20]
     });
 }
 
+
+/*
 function coordsToPixel(latlng) {
     const point = map.latLngToContainerPoint(latlng);
-    return { x: point.x + 280, y: point.y -40};
+    return { x: point.x , y: point.y};
 }
 
 function displayContextMenu(latlng, airport){
@@ -114,8 +150,9 @@ function displayContextMenu(latlng, airport){
     console.log(airport)
     infoContextMenu.textContent = airport["name"];
 
-    infoContextMenu.style.left = coordsToPixel(latlng).x + 'px';
+    infoContextMenu.style.left = `calc(${coordsToPixel(latlng).x}px + 25vw)`;
     infoContextMenu.style.top = coordsToPixel(latlng).y + 'px';
     
     document.body.appendChild(infoContextMenu);
 }
+    */

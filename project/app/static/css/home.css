@@ -380,13 +380,28 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 /* ===================================== */
 /* Info and Tooltips */
 /* ===================================== */
-#info-context-menu {
-    position: absolute;
-    padding: 8px;
+
+.leaflet-popup-content-wrapper {
     background-color: #121212;
-    z-index: 999;
-    border-radius: 8px;
+    padding: 16px;
+
+    font-weight: lighter;
+    color: #5f5f5f;
+
+    span {
+        color: #AFAFAF ;
+        font-weight: bolder;
+    }
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+    margin: 0;
+}
+
+.leaflet-popup-tip-container {
+    display: none;
 }
