@@ -1,18 +1,30 @@
 from models.json_filedata import JSON_FileData
 from models.graph import Graph
+from utils import json_to_graph
+
+def airport_json_test():
+    # JSON test -- every READ is done with a different JSON_FileData instance for rigor. Alternatively, a JSON_FileData.update() could be written
+    filedata = JSON_FileData("project/app/static/resources/test.json")
+    debug_bog:dict = filedata.data["BOG"] # READ
+
+    debug_bog = debug_bog.copy()
+
+    filedata.remove_airport("BOG") # WRITE
+
+    filedata_t = JSON_FileData("project/app/static/resources/test.json") # READ
+
+    filedata_t.add_airport("BOG", debug_bog) # WRITE
+
+    filedata_f = JSON_FileData("project/app/static/resources/test.json") # READ
+
 
 if __name__ == "__main__":
+
+    #airport_json_test()
+
+    airport_json_test()
+
     
-    # JSON test
-    filedata = JSON_FileData("project/app/static/resources/airports_data.json")
-    grafito = Graph(len(filedata.code_list))
-    
-    for flight in filedata.connections:
-        grafito.add_edge ( 
-                         filedata.code_dict[flight[0]],     # Source code to index 
-                         filedata.code_dict[flight[1]],     # Destination code to index
-                         flight[2]                          # Distance
-                         )
-    
-    for index in range(grafito.size):
-        print(f"{filedata.code_list[index]} -> {grafito.adjacency[index]}" )
+
+
+

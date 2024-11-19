@@ -34,6 +34,8 @@ class JSON_FileData():
     
     def __init__(self, filepath:str):
 
+        self.filepath = filepath
+
         self.data:dict = {}
         with open(filepath, encoding="utf-8") as file:
             self.data = json.load(file)
@@ -57,6 +59,8 @@ class JSON_FileData():
         connections = []
         for code, airport in d.items():
             for connected_code in airport['connections']:
+                if connected_code not in self.code_list:
+                    continue
                 lat1, lon1 = airport['latitude'], airport['longitude']
                 lat2, lon2 = d[connected_code]['latitude'], d[connected_code]['longitude']
                 dist = self.calculate_distances(lat1, lon1, lat2, lon2)
@@ -86,7 +90,116 @@ class JSON_FileData():
         # Distancia final en kilómetros
         distancia = R * c
         return distancia
-
     
+    #Metodos para manipular el JSON y el grafo asociado -------
+
+    def add_airport(self, code:str, airport_data:dict):
+        if code in self.code_list and self.data[code]["connections"] != ["404"]:
+            return
+        #elif code in list(self.code_dict.items):
+        #    return # TODO: If code existed at some point then re-add data from base json
+        
+        self.code_dict[code] = len(self.code_list) # Adds the new code to the dict
+        self.code_list.append(code) # -------------- Adds the new code to the list
+        self.data[code] = airport_data # ----------- Appends the airport data to its own entry in the data dict
+
+        #Instead of recalculating every distance again, just go over the new connections
+        #newconnections go from the inserted vertex to the others, bidirection goes the other way.
+        #These lists are different because only newconnections will be used to update the graph. 
+        newconnections:list[tuple] = []
+        bidirection:list[tuple] = []
+        lat1, long1 = self.data[code]['latitude']['longitude']
+        for dest in self.data[code]['connections']:
+            lat2, long2 = self.data[dest]['latitude']['longitude']
+            dist = self.calculate_distances(lat1, long1, lat2, long2)
+
+            newconnections.append((code, dest, dist))
+            bidirection.append((dest, code, dist))
+
+            self.data[dest]['connections'].append(code) # Destination airport needs its connections updated
+
+        self.connections.append(newconnections)
+        self.connections.append(bidirection)
+
+        self.write_to(self.filepath, self.data) # -- Write data dict to the json file
+
+        if code in list(self.code_dict.items): 
+            #If the airport already has an index, just update its adjacencies
+            [self.graph.add_edge(self.code_dict[con[0]], self.code_dict[con[1]], con[2]) for con in newconnections]
+        else:
+            #If not, add a new vertex with its newconnections. this vertex's index should line up with self.code_list and code_dict.
+            self.graph.add_vertex([(self.code_dict[con[1]], con[2]) for con in newconnections])
+        
+
+    #Remove an airport and its connections from the code_list and associated json
+    def remove_airport(self, code:str):
+
+        if code not in self.code_list:
+            return
+        
+        #self.code_dict.pop(code)  # --- dict needs to always know what airport belongs to what index, so keep this commented (?)
+        self.code_list.remove(code) # -- list needs to forget code so its connections can be wiped
+
+        for con in self.data[code]['connections']: # destination airports should wipe deleted airport from its connections
+            self.data[con]['connections'].remove(code)
+
+        self.data[code]['connections'] = ["404"] # --- flag value that denotes deletion status
+
+        self.connections = self.get_connections(self.data) 
+        # ^ searching and removing deprecated connections could take more time, so just recalculate everything ( O(m*n) vs. O(n) ?)
+
+        self.write_to(self.filepath, self.data)
+        
+        self.graph.supress_vertex(self.code_dict[code])
+
+    def add_connection(self, to:str, frm:str):
+
+        if to not in self.code_list or frm not in self.code_list: 
+            #Early return if any of the codes isnt in the graph
+            return
+        
+        #Calculate distance, append them to the connections list
+        lat1, long1 = self.data[to]['latitude'], self.data[to]['longitude']
+        lat2, long2 = self.data[frm]['latitude'], self.data[frm]['longitude']
+        dist:float = self.calculate_distances(lat1, long1, lat2, long2)
+
+        tofrm, frmto = (to, frm, dist), (frm, to, dist)
+
+        self.connections.append(tofrm)
+        self.connections.append(frmto)
+
+        #Add connections to the JSON, write em
+        self.data[to]['connections'].append(frm)
+        self.data[frm]['connections'].append(to)
+
+        self.write_to(self.filepath, self.data)
+
+        self.graph.add_edge(frm, to, dist)
+
+    def remove_connection(self, to:str, frm:str):
+        if to not in self.code_list or frm not in self.code_list: 
+            #Early return if any of the codes isnt in the graph
+            return
+        
+        for index in range(len(self.connections)): # Remove connection from self.connections
+            con = self.connections[index]
+            if (to == con[0] and frm == con[1]) or (to == con[1] and frm == con[0]):
+                self.connections.pop(index)
+        
+        #Remove connections from the JSON, update
+        self.data[to]['connections'].remove(frm)
+        self.data[frm]['connections'].remove(to)
+
+        self.write_to(self.filepath, self.data)
+
+        self.graph.remove_edge(self.code_dict[frm], self.code_dict[to])
+        
+
+    # utils -------------
+    def write_to(self, path:str, d:dict):
+        jsob = json.dumps(d, indent=4)
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(jsob)
+            file.close()
 
         
