@@ -433,12 +433,14 @@ body {
 
 #custom-menu {
     position: absolute;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background-color: #121212AA;
+    border-radius: 8px;
+    border: 1px solid #5f5f5f;
     z-index: 1000;
-    min-width: 150px;
+    width: 240px;
     padding: 5px 0;
+
+    transform: translate(10%, -50%);
 }
 
 #custom-menu ul {
@@ -448,15 +450,35 @@ body {
 }
 
 #custom-menu li {
+    display: flex;
+    justify-content: space-between;
+
     padding: 10px 15px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 #custom-menu li:hover {
-    background-color: #f0f0f0;
+    background-color: #AFAFAF88;
 }
 
 .hidden {
     display: none;
+}
+
+.bad-info {
+    color: #ff2969;
+    font-weight: bold;
+
+    &:hover{
+        color: #ffa3c3;
+    }
+}
+
+.nice-info {
+    color: #6929ff;
+}
+
+hr {
+    border: 1px solid #5f5f5f;
 }

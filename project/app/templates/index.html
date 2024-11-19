@@ -112,10 +112,11 @@
 
     <div id="custom-menu" class="">
         <ul id="menu-actions">
-            <li>Delete Self<i class="fa-solid fa-xmark"></i></li>
-            <li>Delete Self<i class="fa-solid fa-xmark"></i></li>
-            <li>Delete Self<i class="fa-solid fa-xmark"></i></li>
-            <li>Delete Connection<i class="fa-solid fa-caret-right"></i></li>
+            <li onclick="createAirportConnected(event)">Create Airport Connected<i class="fa-solid fa-plus"></i></li>
+            <li onclick="createConnection(event)">Create Connection<i class="fa-solid fa-caret-right nice-info"></i></li>
+            <hr class="solid">
+            <li onclick="deleteConnection(event)">Delete Connection<i class="fa-solid fa-caret-right bad-info"></i></li>
+            <li onclick="deleteSelf(event)"class="bad-info">Delete Self<i class="fa-solid fa-xmark"></i></li>
         </ul>
     </div>
 

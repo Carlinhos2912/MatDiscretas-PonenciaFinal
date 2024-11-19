@@ -51,6 +51,11 @@ function initMap() {
 
     map.setMaxBounds(bounds);
     map.on('drag', function() { map.panInsideBounds(bounds, { animate: true }); });
+    
+    map.on('click', function () {
+        const contextMenu = document.getElementById("custom-menu");
+        contextMenu.classList.add("hidden"); // Hide the menu
+    });
 
     L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=hy6pxKK5t7s7HqMLzBmCy43uRvPkUPPIAsipdlRUGDb5haPR3AdwzgpriCtOPVbB', {
         attribution: '<a href="https://jawg.io">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -217,8 +222,11 @@ function updateData(){
     document.querySelector("#longitude-destination h2").textContent = airports[destinationCodeHolder.value].longitude
 }
 
-
 /*  
     Menu Custom para realizar acciones
 */
 
+function createAirportConnected(event) {}
+function createConnection(event){}
+function deleteConnection(event){}
+function deleteSelf(event){}
